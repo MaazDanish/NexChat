@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NexChat : Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="/Frontend/Style/home.css">
 </head>
 
@@ -26,7 +27,6 @@
                 <input type="password" placeholder="Password" name="password">
                 <input type="password" placeholder="Confirm Password" name="confirmPassword">
                 <button type="submit" id="SignUp-Button">Sign Up</button>
-                <li id="signupmsg" class="msg"></li>
             </form>
         </div>
         <div class="form-container sign-in">
@@ -43,7 +43,6 @@
                 <input type="password" placeholder="Password" name="password">
                 <a href="#">Forget Your Password?</a>
                 <button type="submit" id="SignIn-Button">Sign In</button>
-                <li id="signinmsg" class="msg"></li>
             </form>
         </div>
         <div class="toggle-container">
@@ -52,12 +51,14 @@
                     <h1>Welcome Back to NexChat! </h1>
                     <p>Enter your personal details to use all of site features</p>
                     <button class="hidden" id="login">Sign In</button>
-
+                    <li id="signupmsg" class="msg1"></li>
                 </div>
                 <div class="toggle-panel toggle-right">
                     <h1>Hello, Friend!</h1>
                     <p>Register with your personal details to use all of NexChat features</p>
                     <button class="hidden" id="register">Sign Up</button>
+                    <li id="signinmsg" class="msg1"></li>
+
                 </div>
             </div>
         </div>

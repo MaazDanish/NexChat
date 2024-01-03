@@ -28,6 +28,7 @@ async function SignUp(event) {
             const user = await axios.post('http://localhost:4106/nexchat/user/sign-up', userInfo);
             if (user.status === 200) {
                 alert('registration is done')
+                msg.classList.add('msg');
                 msg.textContent = 'Your ragistration is done successfully';
             }
             expires(msg);
@@ -35,16 +36,19 @@ async function SignUp(event) {
         } else {
             if (event.target.password.value.length < 6) {
                 // console.log('Password must be more than 6 letter');
-                msg.textContent = 'Error - Password must be more than 6 letter'
+                msg.classList.add('msg');
+                msg.textContent = 'Error - Password must be more than 6 letter';
                 expires(msg);
 
-            } else if (event.target.password.value !== event.target.confirmpassword.value) {
+            } else if (event.target.password.value !== event.target.confirmPassword.value) {
                 // console.log('password does not match');
+                msg.classList.add('msg');
                 msg.textContent = "Error - password doesn't match";
                 expires(msg);
 
             } else {
                 // console.log('Password should contain at least one small letter one capital letter and one numeric number');
+                msg.classList.add('msg');
                 msg.textContent = 'Error - Password must contain atleast one small letter, one capital letter and one numeric number'
                 expires(msg);
 
@@ -55,8 +59,8 @@ async function SignUp(event) {
         console.log(err);
         console.log(err.response.status);
         if (err.response.status === 409) {
-            alert('you already are member of our comunity. please sign in ')
-            msg.textContent = 'This user already registered with us';
+            msg.classList.add('msg');
+            msg.textContent = 'Welcome back! It looks like you are already a part of our community.Please Sign in';
             expires(msg);
         }
     }
@@ -89,6 +93,7 @@ function isValidPassword(password, confirmPassword) {
 
 function expires(msg) {
     setTimeout(() => {
+        msg.classList.remove('msg')
         msg.textContent = '';
     }, 3000)
 }
@@ -121,19 +126,22 @@ async function SignIn(event) {
         console.log(res);
         var msg = document.getElementById('signinmsg');
         if (res.response.status === 404) {
+            msg.classList.add('msg');
             msg.textContent = 'User Does not exist. Please sign up first'
 
         }
         else if (res.response.status === 401) {
+            msg.classList.add('msg');
             msg.textContent = 'One or more field is incorrect. Try again'
 
         } else {
-
+            msg.classList.add('msg');
             msg.textContent = 'Internal server error'
         }
 
         setTimeout(() => {
             msg.textContent = '';
+            msg.classList.remove('msg');
         }, 3000)
     }
 }

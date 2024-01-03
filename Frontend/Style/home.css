@@ -213,11 +213,17 @@ body {
     transform: translateX(200%);
 }
 
-.msg {
+.msg1 {
     list-style-type: none;
+}
+
+.msg {
     text-align: center;
+    background-color: rgb(245, 225, 225);
+    border: 1px solid red;
     font-size: 15px;
-    margin-top: 8px;
-    /* color: rgb(245, 28, 28); */
+    margin-top: 30px;
+    padding: 5px 5px;
+    color: rgb(245, 28, 28);
     font-weight: bold;
 }
