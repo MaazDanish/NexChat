@@ -18,3 +18,18 @@ li:nth-child(odd) {
     color: rgb(0, 0, 0);
     padding: 5px 5px;
 }
+
+.msg-input {
+    position: absolute;
+    bottom: 15px;
+    margin-left: 120px;
+    width: 1000px;
+    padding: 5px 10px;
+}
+
+.msg-btn {
+    position: absolute;
+    bottom: 15px;
+    right: 90px;
+    border: none;
+}
