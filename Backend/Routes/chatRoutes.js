@@ -6,6 +6,6 @@ const ChatController = require('../Controller/chatController');
 const authenticateToken = require('../Middleware/authentication');
 
 routes.post('/send-msg', authenticateToken, ChatController.PostChat);
-// routes.post('/sign-in', UserController.SignIn);
+routes.get('/get-msg', authenticateToken, ChatController.getChat);
 
 module.exports = routes;
