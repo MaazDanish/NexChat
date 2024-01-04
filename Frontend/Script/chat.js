@@ -16,8 +16,6 @@ sendChat.addEventListener('click', async () => {
     } catch (err) {
         console.log(err);
     }
-
-
 })
 
 
@@ -27,7 +25,9 @@ window.addEventListener('DOMContentLoaded', async () => {
 
         const headers = { 'authorization': localStorage.getItem('token') };
 
-
+        const user = await axios.get('http://localhost:4106/nexchat/user/getUserInfo', { headers });
+        // console.log(user);
+        displayUserInformation(user.data)
 
         const chat = await axios.get('http://localhost:4106/nexchat/chats/get-msg', { headers });
         for (var i = 0; i < chat.data.length; i++) {
@@ -41,10 +41,33 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 })
 
+function displayUserInformation(user) {
+    document.getElementById('userInfo').innerHTML = `
+    <p class="text-color"><h5>Name</h5> ${user.name}  </p>
+    <p class="text-color"><h5>Email</h5> ${user.email}</p>
+    <p class="text-color"><h5>Phone Number</h5> ${user.phoneNumber}</p>
+    `
+}
+
+function scrollToBottom() {
+    var chatContainer = document.getElementsByClassName("chatContainer");
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+
 function showMsg(chat) {
     var msgBox = document.getElementById('msgBox');
 
     var li = document.createElement('li');
     li.textContent = `${chat.chat}`;
     msgBox.appendChild(li);
+    scrollToBottom();
 }
+
+var logout = document.getElementById('logout');
+
+logout.addEventListener('click', () => {
+    localStorage.removeItem('token');
+    // window.location.href = './SignIn.html';
+    window.location.href = './home.html';
+})

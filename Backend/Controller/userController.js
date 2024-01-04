@@ -59,3 +59,21 @@ exports.SignIn = async (req, res, next) => {
     }
 
 }
+
+exports.getUserInformation = async (req, res, next) => {
+    try {
+        const userId = req.decoded_UserId.userId;
+        console.log(userId);
+
+        const user = await User.findOne({ where: { id: userId } });
+
+        if (!user) {
+            return res.status(409).json({ message: "User does not exist", success: false });
+        }
+
+        res.status(200).json(user);
+
+    } catch (err) {
+        res.status(500).json(err);
+    }
+}

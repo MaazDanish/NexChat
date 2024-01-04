@@ -21,7 +21,7 @@ li:nth-child(odd) {
 
 .msg-input {
     position: absolute;
-    bottom: 15px;
+    bottom: 0px;
     margin-left: 120px;
     width: 1000px;
     padding: 5px 10px;
@@ -29,7 +29,22 @@ li:nth-child(odd) {
 
 .msg-btn {
     position: absolute;
-    bottom: 15px;
+    bottom: 0px;
     right: 90px;
     border: none;
+}
+
+.bg-color {
+    background-color: rgb(255, 234, 234);
+    color: rgb(130, 3, 3);
+}
+
+nav span {
+    margin-left: 20px;
+    font-size: 20px;
+}
+
+.chat-container {
+    overflow-y: auto;
+    max-height: 540px;
 }
