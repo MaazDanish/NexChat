@@ -39,9 +39,12 @@ exports.SignIn = async (req, res, next) => {
         const matchingPassword = await bcrypt.compare(password, user.password);
 
         if (matchingPassword) {
-            const userId = user.id;
+            // console.log(user.id, 'user id');
+            const payload = {
+                userId: user.id
+            }
 
-            let token = jwt.sign(userId, process.env.SECRET_KEY);
+            let token = jwt.sign(payload, process.env.SECRET_KEY);
             console.log(token);
 
             return res.status(200).json({ success: true, message: 'User login Successfull', token: token })

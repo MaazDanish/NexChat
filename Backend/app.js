@@ -4,6 +4,10 @@ require('dotenv').config();
 
 const sequelize = require('./Util/database');
 const userRoutes = require('./Routes/userRoutes');
+const chatRoutes = require('./Routes/chatRoutes');
+
+const User = require('./Models/userModel');
+const Chat = require('./Models/chatModel');
 
 const app = express();
 
@@ -15,7 +19,11 @@ app.use(cors({
 app.use(express.json());
 
 app.use('/nexchat/user', userRoutes);
+app.use('/nexchat/chats', chatRoutes);
 
+
+User.hasMany(Chat);
+Chat.belongsTo(User);
 
 sequelize.sync().then(res => {
     app.listen(process.env.PORT_NUMBER);
