@@ -77,3 +77,21 @@ exports.getUserInformation = async (req, res, next) => {
         res.status(500).json(err);
     }
 }
+
+exports.getAllUsers = async (req, res, next) => {
+    try {
+
+    } catch (err) {
+        console.log(err);
+        const users = await User.findAll({
+            where: {
+                id: {
+                    [Op.ne]: req.decoded_UserId.userId
+                }
+            },
+            attributes: ['name']
+        });
+
+        res.status(200).json({ message: 'successfull', users })
+    }
+}

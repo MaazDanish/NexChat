@@ -29,10 +29,10 @@ window.addEventListener('DOMContentLoaded', async () => {
         // console.log(user);
         displayUserInformation(user.data)
 
-        const chat = await axios.get('http://localhost:4106/nexchat/chats/get-msg', { headers });
-        for (var i = 0; i < chat.data.length; i++) {
-            // console.log(chat.data[i].chat);
-            showMsg(chat.data[i]);
+        const chat = await axios.get('http://localhost:4106/nexchat/chats/get-all-msg', { headers });
+        for (var i = 0; i < chat.data.messages.length; i++) {
+            console.log(chat.data.messages[i]);
+            showMsg(chat.data.messages[i]);
         }
 
 

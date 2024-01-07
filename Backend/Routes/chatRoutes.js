@@ -7,5 +7,6 @@ const authenticateToken = require('../Middleware/authentication');
 
 routes.post('/send-msg', authenticateToken, ChatController.PostChat);
 routes.get('/get-msg', authenticateToken, ChatController.getChat);
+routes.get('/get-all-msg', authenticateToken, ChatController.getAllChats);
 
 module.exports = routes;
