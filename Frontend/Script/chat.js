@@ -29,11 +29,14 @@ window.addEventListener('DOMContentLoaded', async () => {
         // console.log(user);
         displayUserInformation(user.data)
 
+        // setInterval(async () => {
+
         const chat = await axios.get('http://localhost:4106/nexchat/chats/get-all-msg', { headers });
         for (var i = 0; i < chat.data.messages.length; i++) {
             console.log(chat.data.messages[i]);
             showMsg(chat.data.messages[i]);
         }
+        // }, 1000)
 
 
     } catch (err) {

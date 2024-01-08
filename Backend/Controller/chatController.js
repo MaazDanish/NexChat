@@ -45,7 +45,7 @@ exports.getAllChats = async (req, res, next) => {
         if (!chat) {
             return res.status(409).json({ message: 'There is no data exist', success: false });
         }
-        console.log(chat);
+        // console.log(chat);
         res.status(200).json({ messages: chat, success: true, id: userId });
     } catch (err) {
         res.status(500).json({ err: err, message: 'Internal server error while fething data from backend', success: false })

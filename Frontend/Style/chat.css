@@ -22,9 +22,10 @@ li:nth-child(odd) {
 .msg-input {
     position: absolute;
     bottom: 0px;
-    margin-left: 120px;
-    width: 1000px;
+    margin-left: 320px;
+    width: 800px;
     padding: 5px 10px;
+
 }
 
 .msg-btn {
