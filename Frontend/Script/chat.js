@@ -29,13 +29,11 @@ window.addEventListener('DOMContentLoaded', async () => {
         // console.log(user);
         displayUserInformation(user.data)
 
+        showMsg();
+
         // setInterval(async () => {
 
-        const chat = await axios.get('http://localhost:4106/nexchat/chats/get-all-msg', { headers });
-        for (var i = 0; i < chat.data.messages.length; i++) {
-            console.log(chat.data.messages[i]);
-            showMsg(chat.data.messages[i]);
-        }
+
         // }, 1000)
 
 
@@ -43,6 +41,10 @@ window.addEventListener('DOMContentLoaded', async () => {
         console.log(err);
     }
 })
+
+async function showChatsOnScxreens(chat) {
+    chat
+}
 
 function displayUserInformation(user) {
     document.getElementById('userInfo').innerHTML = `
@@ -57,14 +59,31 @@ function scrollToBottom() {
     chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
+setInterval(() => {
+    showMsg();
+}, 1000)
 
-function showMsg(chat) {
-    var msgBox = document.getElementById('msgBox');
 
-    var li = document.createElement('li');
-    li.textContent = `${chat.chat}`;
-    msgBox.appendChild(li);
-    scrollToBottom();
+async function showMsg() {
+    try {
+
+        const headers = {
+            'authorization': localStorage.getItem('token')
+        }
+
+        var msgBox = document.getElementById('msgBox');
+        const chat = await axios.get('http://localhost:4106/nexchat/chats/get-all-msg', { headers });
+        msgBox.innerHTML = '';
+        for (var i = 0; i < chat.data.messages.length; i++) {
+            // console.log(chat.data.messages[i]);
+            var li = document.createElement('li');
+            li.textContent = `${chat.data.messages[i].chat}`;
+            msgBox.appendChild(li);
+        }
+        scrollToBottom();
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 var logout = document.getElementById('logout');
