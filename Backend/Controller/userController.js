@@ -45,7 +45,7 @@ exports.SignIn = async (req, res, next) => {
             }
 
             let token = jwt.sign(payload, process.env.SECRET_KEY);
-            console.log(token);
+            // console.log(token);
 
             return res.status(200).json({ success: true, message: 'User login Successfull', token: token })
         } else {
@@ -63,7 +63,7 @@ exports.SignIn = async (req, res, next) => {
 exports.getUserInformation = async (req, res, next) => {
     try {
         const userId = req.decoded_UserId.userId;
-        console.log(userId);
+        // console.log(userId);
 
         const user = await User.findOne({ where: { id: userId } });
 
@@ -74,7 +74,9 @@ exports.getUserInformation = async (req, res, next) => {
         res.status(200).json(user);
 
     } catch (err) {
+        console.log(err);
         res.status(500).json(err);
+
     }
 }
 

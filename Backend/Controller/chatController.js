@@ -1,5 +1,6 @@
 const User = require('../Models/userModel');
 const Chat = require('../Models/chatModel');
+const { Sequelize } = require('sequelize');
 
 
 exports.PostChat = async (req, res, next) => {
@@ -37,7 +38,6 @@ exports.getChat = async (req, res, next) => {
 
 exports.getAllChats = async (req, res, next) => {
     try {
-        const userId = req.decoded_UserId.userId;
 
         const chat = await Chat.findAll();
 
@@ -46,9 +46,35 @@ exports.getAllChats = async (req, res, next) => {
             return res.status(409).json({ message: 'There is no data exist', success: false });
         }
         // console.log(chat);
-        res.status(200).json({ messages: chat, success: true, id: userId });
+        res.status(200).json({ messages: chat, success: true });
     } catch (err) {
         res.status(500).json({ err: err, message: 'Internal server error while fething data from backend', success: false })
         console.log(err);
     }
 }
+
+// exports.getAllChats = async (req, res, next) => {
+//     try {
+//         // lsid local storage id
+//         const lsid = req.params.lsid;
+//         console.log(lsid);
+
+//         const chat = await Chat.findAll({
+//             where: {
+//                 id: {
+//                     [Sequelize.Op.gt]: lsid
+//                 }
+//             }
+//         });
+
+//         // console.log(chat.dataValues, 'chat');
+//         if (!chat) {
+//             return res.status(409).json({ message: 'There is no data exist', success: false });
+//         }
+//         // console.log(chat);
+//         res.status(200).json({ messages: chat, success: true });
+//     } catch (err) {
+//         res.status(500).json({ err: err, message: 'Internal server error while fething data from backend', success: false })
+//         console.log(err);
+//     }
+// }

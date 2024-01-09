@@ -21,17 +21,17 @@ li:nth-child(odd) {
 
 .msg-input {
     position: absolute;
-    bottom: 0px;
-    margin-left: 320px;
-    width: 800px;
+    bottom: 5px;
+    margin-left: 82px;
+    width: 1000px;
     padding: 5px 10px;
 
 }
 
 .msg-btn {
     position: absolute;
-    bottom: 0px;
-    right: 90px;
+    bottom: 5px;
+    right: 83px;
     border: none;
 }
 
@@ -47,5 +47,6 @@ nav span {
 
 .chat-container {
     overflow-y: auto;
-    max-height: 540px;
+    max-height: 490px;
+    border: 3px solid rgb(255, 0, 43);
 }
