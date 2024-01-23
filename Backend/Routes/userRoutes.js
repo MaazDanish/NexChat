@@ -7,6 +7,6 @@ const authenticateToken = require('../Middleware/authentication');
 routes.post('/sign-up', UserController.SignUpUser);
 routes.post('/sign-in', UserController.SignIn);
 routes.get('/getUserInfo', authenticateToken, UserController.getUserInformation);
-routes.get('/get-all-user', authenticateToken, UserController.getUserInformation);
+routes.get('/get-all-user', authenticateToken, UserController.getAllUsers);
 
 module.exports = routes;

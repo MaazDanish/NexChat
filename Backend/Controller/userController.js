@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
+const sequelize = require('sequelize')
 
 const User = require('../Models/userModel');
 
@@ -82,18 +83,18 @@ exports.getUserInformation = async (req, res, next) => {
 
 exports.getAllUsers = async (req, res, next) => {
     try {
-
-    } catch (err) {
-        console.log(err);
         const users = await User.findAll({
             where: {
                 id: {
-                    [Op.ne]: req.decoded_UserId.userId
+                    [sequelize.Op.ne]: req.decoded_UserId.userId
                 }
             },
-            attributes: ['name']
+            attributes: ['name','id']
+
         });
 
         res.status(200).json({ message: 'successfull', users })
+    } catch (err) {
+        console.log(err);
     }
 }

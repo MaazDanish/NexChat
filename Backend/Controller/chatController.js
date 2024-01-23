@@ -38,8 +38,16 @@ exports.getChat = async (req, res, next) => {
 
 exports.getAllChats = async (req, res, next) => {
     try {
+        const id = req.query.last;
+        console.log(id,'coming frm fronte nd as a local storage id');
 
-        const chat = await Chat.findAll();
+        const chat = await Chat.findAll({
+            where: {
+                id: {
+                    [Sequelize.Op.gt]: id
+                }
+            }
+        });
 
         // console.log(chat.dataValues, 'chat');
         if (!chat) {
@@ -56,23 +64,26 @@ exports.getAllChats = async (req, res, next) => {
 // exports.getAllChats = async (req, res, next) => {
 //     try {
 //         // lsid local storage id
-//         const lsid = req.params.lsid;
-//         console.log(lsid);
+//         const id = req.query.id;
+//         console.log(id, 'Local storage id coming from front end');
 
-//         const chat = await Chat.findAll({
+//         const messages = await Chat.findAll({
 //             where: {
 //                 id: {
-//                     [Sequelize.Op.gt]: lsid
+//                     [Op.gt]: id
 //                 }
 //             }
 //         });
 
 //         // console.log(chat.dataValues, 'chat');
-//         if (!chat) {
+
+//         const userId = req.decoded_UserId.userId;
+//         console.log(userId,'usr id in get all chats for local storage');
+//         if (!messages) {
 //             return res.status(409).json({ message: 'There is no data exist', success: false });
 //         }
 //         // console.log(chat);
-//         res.status(200).json({ messages: chat, success: true });
+//         res.status(200).json({ messages: messages, success: true });
 //     } catch (err) {
 //         res.status(500).json({ err: err, message: 'Internal server error while fething data from backend', success: false })
 //         console.log(err);
