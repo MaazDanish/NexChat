@@ -43,10 +43,9 @@ async function fetchMsg() {
 
         const headers = { 'authorization': localStorage.getItem('token') };
 
-        const users = await axios.get('http://localhost:4106/nexchat/user/get-all-user', { headers });
+        // const users = await axios.get('http://localhost:4106/nexchat/user/get-all-user', { headers });
 
         let messages = JSON.parse(localStorage.getItem('msg'));
-        // console.log(messages);
 
         if (messages) {
             const last = 0;
@@ -64,7 +63,7 @@ async function fetchMsg() {
             // console.log(last);
         }
         // console.log(last, 'id of last masg in local storage');
-    
+
 
     } catch (err) {
         console.log(err);
@@ -73,23 +72,31 @@ async function fetchMsg() {
 
 setInterval(() => {
     fetchMsg();
-    // showMsg();
 }, 1000)
 
-async function showMsg(messages) {
-    // let message = JSON.parse(localStorage.getItem('msg'));
-    console.log(messages);
-    var masgBox = document.getElementById('msgBox');
-    masgBox.innerHTML = ''
 
-    for (let i = 0; i < messages.length; i++) {
+function showMsg(messages) {
+    try {
 
-        const li = document.createElement('li');
-        li.textContent = `${messages[i].chat}`;
-        masgBox.appendChild(li);
-        scrollToBottom();
+        // let message = JSON.parse(localStorage.getItem('msg'));
+        // console.log(messages);
+        // console.log(user);
+        var masgBox = document.getElementById('msgBox');
+        masgBox.innerHTML = ''
+
+        for (let i = 0; i < messages.length; i++) {
+
+
+            const li = document.createElement('li');
+            li.textContent = `${messages[i].chat}`;
+            masgBox.appendChild(li);
+            scrollToBottom();
+        }
+
+
+    } catch (err) {
+        console.log(err);
     }
-
 }
 
 var logout = document.getElementById('logout');

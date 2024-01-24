@@ -12,6 +12,7 @@ const authenticateToken = (req, res, next) => {
     
         // console.log(decoded);
         req.decoded_UserId = decoded;
+        console.log(req.decoded_UserId);
         // console.log(req.decoded_UserId,'decoded id');
         next();
     });

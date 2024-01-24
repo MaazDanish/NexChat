@@ -4,7 +4,6 @@ const sequelize = require('sequelize')
 
 const User = require('../Models/userModel');
 
-
 exports.SignUpUser = async (req, res, next) => {
     try {
         const { name, email, phoneNumber, password } = req.body;
@@ -44,8 +43,9 @@ exports.SignIn = async (req, res, next) => {
             const payload = {
                 userId: user.id
             }
-
+            
             let token = jwt.sign(payload, process.env.SECRET_KEY);
+            console.log(token,'token');
             // console.log(token);
 
             return res.status(200).json({ success: true, message: 'User login Successfull', token: token })

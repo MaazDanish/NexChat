@@ -119,6 +119,7 @@ async function SignIn(event) {
         const user = await axios.post('http://localhost:4106/nexchat/user/sign-in', signin);
         // console.log(user.data.token);
         if (user.status === 200) {
+            console.log(user.data.token);
             localStorage.setItem("token", user.data.token);
             window.location.href = './chat.html';
         }
