@@ -7,8 +7,8 @@ const GroupController = require('../Controller/groupController');
 const ChatController = require('../Controller/chatController');
 const authenticateToken = require('../Middleware/authentication');
 
-routes.post('/create-group', GroupController.createGroup);
-//routes.get('/get-msg', ChatController.getChat);
+routes.post('/create-group', authenticateToken, GroupController.createGroup);
+routes.get('/get-groups', authenticateToken, GroupController.getGroups);
 //routes.get('/get-all-msg', ChatController.getAllChats);
 // routes.get('/get-all-msg/:lsid', ChatController.getAllChats);
 

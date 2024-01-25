@@ -41,6 +41,7 @@ Member.hasMany(Chat);
 Chat.belongsTo(Member);
 
 
+
 sequelize.sync().then(res => {
     app.listen(process.env.PORT_NUMBER);
     console.log(`Server is running on port ${process.env.PORT_NUMBER}`);
