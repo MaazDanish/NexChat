@@ -43,3 +43,21 @@ exports.getGroups = async (req, res, next) => {
     }
 }
 
+exports.joinGroup = async (req, res, next) => {
+    try {
+        console.log('joining group controller ');
+        const groupId = req.params.groupId;
+        const group = await Group.findByPk(groupId);
+        if (group) {
+            const member = await group.addUser(req.decoded_UserId.userId)
+            console.log(member);
+            return res.status(200).json(member);
+        } else {
+            res.status(409).json({ masg: 'Group not exist' });
+        }
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ msg: 'Internal server error' });
+    }
+}

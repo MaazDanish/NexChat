@@ -11,7 +11,7 @@ const Member = sequelize.define('member', {
     },
     admin: {
         type: Sequelize.BOOLEAN,
-        allowNull: false
+        defaultValue: false
     }
 })
 
