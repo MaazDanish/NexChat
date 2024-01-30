@@ -70,9 +70,9 @@ async function fetchMsg() {
     }
 }
 
-setInterval(() => {
-    fetchMsg();
-}, 1000)
+// setInterval(() => {
+//     fetchMsg();
+// }, 1000)
 
 
 function showMsg(messages) {
@@ -87,9 +87,10 @@ function showMsg(messages) {
         for (let i = 0; i < messages.length; i++) {
 
 
-            const li = document.createElement('li');
-            li.textContent = `${messages[i].chat}`;
-            masgBox.appendChild(li);
+            const div = document.createElement('div');
+            div.textContent = `${messages[i].chat}`;
+            div.classList = 'msgs-div';
+            masgBox.appendChild(div);
             scrollToBottom();
         }
 
