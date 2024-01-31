@@ -17,6 +17,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         // console.log('hiiiii');
         const headers = { 'authorization': localStorage.getItem('token') };
         const user = await axios.get('http://localhost:4106/nexchat/user/getUserInfo', { headers });
+        const chat = await axios.get('http://localhost:4106/nexchat/chats/send-group-msg',);
         // console.log(user);
         displayUserInformation(user.data)
         fetchMsg();

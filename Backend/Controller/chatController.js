@@ -1,5 +1,7 @@
 const User = require('../Models/userModel');
 const Chat = require('../Models/chatModel');
+const Member = require('../Models/Member');
+const Group = require('../Models/Group');
 const { Sequelize } = require('sequelize');
 
 
@@ -19,17 +21,48 @@ exports.PostChat = async (req, res, next) => {
     }
 }
 
-exports.getChat = async (req, res, next) => {
+exports.PostGroupChat = async (req, res, next) => {
     try {
-        const userId = req.decoded_UserId.userId;
+        const { groupId, memberId, chat } = req.body;
+        // const id = groupId;
+        console.log(groupId, memberId, chat, 'TESTING IN POST CHAT CONTROLLER');
 
-        const chat = await Chat.findAll({ where: { userId: userId } });
-        // console.log(chat.dataValues, 'chat');
-        if (!chat) {
-            return res.status(409).json({ message: 'There is no data exist', success: false });
+        // const member = await Member.findOne({ groupId, id: memberId });
+        // console.log(member);
+
+        // const message = await member.createChat({ chat, groupId });
+        const msg = await Chat.create({
+            chat: chat,
+            groupId: groupId,
+            memberId: memberId
+        });
+
+        // const group = await Group.findByPk(id);
+
+        console.log(msg);
+
+        return res.status(203).json({ success: true, msg })
+
+
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Internal Server Error', success: false });
+
+    }
+}
+
+exports.getGroupChat = async (req, res, next) => {
+    try {
+        // const userId = req.decoded_UserId.userId;
+        const id = req.body.groupId;
+        const group = await Group.findByPk(id);
+        if (group) {
+            const message = await Chat.findAll({ where: { groupId: id } })
+            return res.status(200).json({ success: true, msg: "successfully fecthed", message });
+        } else {
+            return res.status(409).json({ msg: "There is no group exist ", success: false });
         }
-
-        res.status(200).json(chat);
     } catch (err) {
         res.status(500).json({ err: err, message: 'Internal server error while fething data from backend', success: false })
         console.log(err);
@@ -39,7 +72,7 @@ exports.getChat = async (req, res, next) => {
 exports.getAllChats = async (req, res, next) => {
     try {
         const id = req.query.last;
-        console.log(id,'coming frm fronte nd as a local storage id');
+        console.log(id, 'coming frm fronte nd as a local storage id');
 
         const chat = await Chat.findAll({
             where: {

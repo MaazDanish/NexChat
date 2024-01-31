@@ -25,8 +25,8 @@ app.use('/nexchat/user', userRoutes);
 app.use('/nexchat/chats', chatRoutes);
 app.use('/nexchat/group', groupRoutes);
 
-User.hasMany(Chat);
-Chat.belongsTo(User);
+// User.hasMany(Chat);
+// Chat.belongsTo(User);
 
 User.belongsToMany(Group, { through: Member });
 Group.belongsToMany(User, { through: Member });
