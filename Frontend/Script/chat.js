@@ -12,12 +12,46 @@ sendChat.addEventListener('click', async () => {
     }
 })
 
+
+async function createGroup() {
+    try {
+        var notification = document.getElementById('notification');
+        const headers = {
+            'Authorization': localStorage.getItem('token')
+        }
+        var groupName = document.getElementById('groupName').value;
+        const grpBody = {
+            name: groupName
+        }
+        if (grpBody.name === '') {
+            notification.className = 'notification-style';
+            notification.textContent = `Group name can't be empty`;
+        } else {
+
+            const grp = await axios.post('http://localhost:4106/nexchat/group/create-group', grpBody, { headers })
+            if (grp.status === 200) {
+                notification.className = 'notification-style';
+                notification.textContent = `${grp.data.name} is created successfully.`;
+                // displayGroupList(grp.data);
+            }
+
+            document.getElementById('groupName').value = '';
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 window.addEventListener('DOMContentLoaded', async () => {
     try {
         // console.log('hiiiii');
         const headers = { 'authorization': localStorage.getItem('token') };
         const user = await axios.get('http://localhost:4106/nexchat/user/getUserInfo', { headers });
-        const chat = await axios.get('http://localhost:4106/nexchat/chats/send-group-msg',);
+        const grp = await axios.get('http://localhost:4106/nexchat/group/get-groups', { headers });
+        // console.log(grp.data);
+        displayGroupList(grp.data);
+
+
         // console.log(user);
         displayUserInformation(user.data)
         fetchMsg();
@@ -32,6 +66,18 @@ function displayUserInformation(user) {
     <p class="text-color"><h5>Email</h5> ${user.email}</p>
     <p class="text-color"><h5>Phone Number</h5> ${user.phoneNumber}</p>
     `
+}
+
+function displayGroupList(grp) {
+    const parent = document.getElementById('groupList');
+    parent.innerHTML = '';
+    for (var i = 0; i < grp.length; i++) {
+        console.log(grp[i].name);
+        const li = document.createElement('li');
+        li.textContent = `${grp[i].name}`;
+        parent.appendChild(li);
+    }
+
 }
 
 function scrollToBottom() {

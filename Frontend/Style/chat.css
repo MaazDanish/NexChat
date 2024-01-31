@@ -99,3 +99,36 @@ nav span {
     margin-right: 50px;
     font-weight: bolder;
 }
+
+.bg-light {
+    background-color: #e3f2fd;
+}
+
+/* Background color for the right section (Chat Window) */
+/* .chat-container {
+    background-color: #b6f9af;
+} */
+
+/* Background color for the footer with the input field */
+.footer {
+    background-color: #e0e0e0;
+}
+
+.design-structure {
+    max-height: 652px;
+}
+
+.bg {
+    border: 1px solid white;
+}
+
+.notification-style {
+    background-color: rgb(255, 223, 223);
+    width: fit-content;
+    display: inline-block;
+    text-align: center;
+    margin: 10px 150px;
+    padding: 5px 10px;
+    border-radius: 15px;
+    color: rgb(255, 0, 0);
+}

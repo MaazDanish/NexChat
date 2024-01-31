@@ -67,25 +67,7 @@
 
                 <ul class="list-group grp-list" id="groupList">
                     <!-- Dynamically add group names here -->
-                    <li>pglo ka grp</li>
-                    <li>pglo ka grp</li>
-                    <li>pglo ka grp</li>
-                    <li>pglo ka grp</li>
-                    <li>pglo ka grp</li>
-                    <li>pglo ka grp</li>
-                    <li>pglo ka grp</li>
-                    <li>pglo ka grp</li>
-                    <li>pglo ka grp</li>
-                    <li>pglo ka grp</li>
-                    <li>pglo ka grp</li>
-                    <li>pglo ka grp</li>
-                    <li>pglo ka grp</li>
-                    <li>pglo ka grp</li>
-                    <li>pglo ka grp</li>
-                    <li>pglo ka grp</li>
-                    <li>pglo ka grp</li>
-                    <li>pglo ka grp</li>
-                    <li>pglo ka grp</li>
+
                 </ul>
             </div>
 
@@ -126,6 +108,32 @@
             </div>
         </div>
     </div>
+
+    <!-- Modals are here -->
+    <div class="modal fade" id="createGroupModal" tabindex="-1" aria-labelledby="createGroupModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createGroupModalLabel">Create Group</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <label for="groupName">Group Name:</label>
+                        <input type="text" class="form-control" id="groupName" placeholder="Enter group name" required>
+                    </form>
+                    <div  id="notification"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" onclick="createGroup()">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
     <!-- <div class="container">
         <div class="container chat-container chatContainer" id="msgBox">
