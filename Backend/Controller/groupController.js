@@ -8,6 +8,8 @@ const { UUIDV4 } = require('sequelize');
 exports.createGroup = async (req, res, next) => {
     try {
         const name = req.body.name;
+        const users = req.body.users;
+        console.log(users, 'adding users are here');
         console.log(name);
         const id = req.decoded_UserId.userId;
         console.log(id);
@@ -15,6 +17,11 @@ exports.createGroup = async (req, res, next) => {
         //  const member = await Member.create({ userId: id, admin: true }, group, { through: { admin: true } })
         const member = await Member.create({ userId: id, admin: true, groupId: group.id });
         console.log(group, member);
+
+        for (const userId of users) {
+            await Member.create({ userId: userId, groupId: group.id })
+        }
+
         return res.status(200).json(group);
     } catch (err) {
         console.log(err);
@@ -32,9 +39,6 @@ exports.getGroups = async (req, res, next) => {
             return res.status(409).json({ masg: 'no user existF' });
         }
         const groups = await user.getGroups();
-
-
-        //const groups = await req.decoded_UserId.userId.getGroups();
         console.log(groups);
         res.status(200).json(groups);
     } catch (err) {
@@ -55,6 +59,33 @@ exports.joinGroup = async (req, res, next) => {
         } else {
             res.status(409).json({ masg: 'Group not exist' });
         }
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ msg: 'Internal server error' });
+    }
+}
+
+exports.getAllGroupUsers = async (req, res, next) => {
+    try {
+        const groupId = req.query.groupId;
+        console.log(groupId, 'tetsing');
+        const group = await Group.findAll({
+            where: {
+                id: groupId
+            },
+            include: [
+                {
+                    model: User,
+                    attributes: ['name'],
+                    through: { attributes: [] } // If you don't want to include any additional attributes from the "through" table
+                }
+            ],
+            order: [['createdAt', 'ASC']]
+        });
+
+        console.log(group);
+        res.status(200).json(group);
 
     } catch (err) {
         console.log(err);

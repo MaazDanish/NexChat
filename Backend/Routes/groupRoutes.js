@@ -10,6 +10,6 @@ const authenticateToken = require('../Middleware/authentication');
 routes.post('/create-group', authenticateToken, GroupController.createGroup);
 routes.get('/get-groups', authenticateToken, GroupController.getGroups);
 routes.get('/join-groups/:groupId', authenticateToken, GroupController.joinGroup);
-// routes.get('/get-all-msg/:lsid', ChatController.getAllChats);
+routes.get('/get-all-group-users', GroupController.getAllGroupUsers);
 
 module.exports = routes;

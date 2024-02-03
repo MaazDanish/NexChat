@@ -15,14 +15,24 @@ sendChat.addEventListener('click', async () => {
 
 async function createGroup() {
     try {
+
         var notification = document.getElementById('notification');
         const headers = {
             'Authorization': localStorage.getItem('token')
         }
+
+        var selectUser = document.getElementById('selectUser');
+        const selectedUsers = Array.from(selectUser.selectedOptions).map(option => option.value);
+        console.log(selectedUsers);
+
+
         var groupName = document.getElementById('groupName').value;
         const grpBody = {
-            name: groupName
+            name: groupName,
+            users: selectedUsers
         }
+
+
         if (grpBody.name === '') {
             notification.className = 'notification-style';
             notification.textContent = `Group name can't be empty`;
@@ -47,18 +57,46 @@ window.addEventListener('DOMContentLoaded', async () => {
         // console.log('hiiiii');
         const headers = { 'authorization': localStorage.getItem('token') };
         const user = await axios.get('http://localhost:4106/nexchat/user/getUserInfo', { headers });
-        const grp = await axios.get('http://localhost:4106/nexchat/group/get-groups', { headers });
-        // console.log(grp.data);
-        displayGroupList(grp.data);
-
-
-        // console.log(user);
         displayUserInformation(user.data)
         fetchMsg();
+
+        const grp = await axios.get('http://localhost:4106/nexchat/group/get-groups', { headers });
+        displayGroupList(grp.data);
+        // console.log(grp.data);
+
+        const users = await axios.get('http://localhost:4106/nexchat/user/get-all-user', { headers });
+        console.log(users.data);
+        saveUserForaddingInGroup(users.data);
+
+        const groupId = "0c942811-9f99-4c00-bdbf-dee32d0f5496";
+
+        console.log(groupId);
+        const usersInAGroup = await axios.get('http://localhost:4106/nexchat/group/get-all-group-users', {
+            params: {
+                groupId: groupId
+            }
+        });
+        console.log(usersInAGroup.data[0].users);
     } catch (err) {
         console.log(err);
     }
 })
+
+function saveUserForaddingInGroup(user) {
+    var selectUser = document.getElementById('selectUser');
+
+    console.log(user.users);
+
+    for (var i = 0; i < user.users.length; i++) {
+        console.log(user.users[i].name, user.users[i].id);
+        var option = document.createElement('option');
+        option.value = user.users[i].id;
+        option.text = user.users[i].name;
+        selectUser.appendChild(option);
+    }
+
+
+}
 
 function displayUserInformation(user) {
     document.getElementById('userInfo').innerHTML = `
@@ -71,8 +109,11 @@ function displayUserInformation(user) {
 function displayGroupList(grp) {
     const parent = document.getElementById('groupList');
     parent.innerHTML = '';
+
+
+
     for (var i = 0; i < grp.length; i++) {
-        console.log(grp[i].name);
+        // console.log(grp[i].name);
         const li = document.createElement('li');
         li.textContent = `${grp[i].name}`;
         parent.appendChild(li);
