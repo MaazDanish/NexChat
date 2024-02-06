@@ -5,8 +5,12 @@ sendChat.addEventListener('click', async () => {
     try {
         var chat = document.getElementById('chat-input');
         const headers = { 'authorization': localStorage.getItem('token') };
+        const groupId = localStorage.getItem('groupId');
 
-        const chats = { chat: chat.value };
+        const chats = {
+            chat: chat.value,
+            groupId: groupId
+        };
         let response = await axios.post('http://localhost:4106/nexchat/chats/send-group-msg', chats, { headers });
         chat.value = '';
     } catch (err) {
@@ -60,7 +64,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         const headers = { 'authorization': localStorage.getItem('token') };
         const user = await axios.get('http://localhost:4106/nexchat/user/getUserInfo', { headers });
         displayUserInformation(user.data)
-        fetchMsg();
+        // fetchMsg();
 
         const grp = await axios.get('http://localhost:4106/nexchat/group/get-groups', { headers });
         displayGroupList(grp.data);
@@ -148,6 +152,9 @@ function displayGroupList(grp) {
         li.onclick = function () {
             // console.log(currentGroup.id);
             // console.log(li.getAttribute('group-id'));
+            // setInterval(() => {
+    
+            // }, 1000)
             fetchMsg(currentGroup.id, currentGroup.name)
             displayGroupDetails(currentGroup.id, currentGroup.name);
         }
@@ -165,6 +172,8 @@ function scrollToBottom() {
 async function fetchMsg(grpId, groupName) {
     try {
 
+        localStorage.setItem('groupId', grpId);
+
         const headers = { 'authorization': localStorage.getItem('token') };
         var msgBox = document.getElementById('msgBox');
 
@@ -174,7 +183,7 @@ async function fetchMsg(grpId, groupName) {
 
         grpname.textContent = groupName;
 
-        const groupMessages = await axios.get('http://localhost:4106/nexchat/chats/get-group-msg', { params: { groupId } })
+        const groupMessages = await axios.get('http://localhost:4106/nexchat/chats/get-group-msg', { params: { groupId: grpId } })
 
         msgBox.innerHTML = ''
 
@@ -203,9 +212,7 @@ async function fetchMsg(grpId, groupName) {
     }
 }
 
-// setInterval(() => {
-//     fetchMsg();
-// }, 1000)
+
 
 
 // function showMsg(messages) {

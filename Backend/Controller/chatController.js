@@ -24,7 +24,17 @@ exports.PostChat = async (req, res, next) => {
 exports.PostGroupChat = async (req, res, next) => {
     try {
 
-        const { groupId, memberId, chat } = req.body;
+        const { groupId, chat } = req.body;
+        const id = req.decoded_UserId.userId;
+
+        const member = await Member.findOne({ where: { userId: id, groupId: groupId } })
+        // console.log(member.dataValues.id, 'tetsing');
+
+
+        if (!member) {
+            res.status(409).json({ message: 'You are not a member of this group', success: false })
+        }
+        const memberId = member.dataValues.id;
         // const id = groupId;
         // console.log(groupId, memberId, chat, 'TESTING IN POST CHAT CONTROLLER');
 
