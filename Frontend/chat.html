@@ -57,49 +57,34 @@
     </div>
 
     <!-- ----------------------- -->
-    <div class="container-fluid">
-        <div class="row">
+    <div class="container-fluid container-body">
+        <div class="row parentElemet">
             <!-- Left Section for Group List -->
-            <div class="col-md-3 bg-dark design-structure">
+            <div class="col-md-3 bg-dark design-structure left-side">
                 <!-- Create Group Option -->
                 <button type="button" class="btn btn-primary mt-3 mb-3 creatGroup-button" data-bs-toggle="modal"
                     data-bs-target="#createGroupModal">Create Group</button>
 
                 <h3>Groups</h3>
-                <ul class="list-group grp-list" id="groupList">
+                <ul class="list-group grp-list group-List grp" id="groupList">
 
                     <!-- Dynamically add group names here -->
                 </ul>
             </div>
 
             <!-- Right Section for Chat Window -->
-            <div class="container chat-container chatContainer col-md-9 bg bg-dark" id="msgBox">
-                <navbar class="headerofnav d-flex justify-content-between">
-                    <h4 id="grp-name">Pglo ka grp</h4>
-                    <button class="btn btn-light">Edit</button>
-                </navbar>
-                <div id="msgBox">
-                    <div class="msgs-div">Do Chats Here.Do chats here</div>
-                    <div class="msgs-div">Do Chats Here.Do chats here</div>
-                    <div class="msgs-div">Do Chats Here.Do chats here</div>
-                    <div class="msgs-div">Do Chats Here.Do chats here</div>
-                    <div class="msgs-div">Do Chats Here.Do chats here</div>
-                    <div class="msgs-div">Do Chats Here.Do chats here</div>
-                    <div class="msgs-div">Do Chats Here.Do chats here</div>
-                    <div class="msgs-div">Do Chats Here.Do chats here</div>
-                    <div class="msgs-div">Do Chats Here.Do chats here</div>
-                    <div class="msgs-div">Do Chats Here.Do chats here</div>
-                    <div class="msgs-div">Do Chats Here.Do chats here</div>
-                    <div class="msgs-div">Do Chats Here.Do chats here</div>
-                    <div class="msgs-div">Do Chats Here.Do chats here</div>
-                    <div class="msgs-div">Do Chats Here.Do chats here</div>
-                    <div class="msgs-div">Do Chats Here.Do chats here</div>
-                    <div class="msgs-div">Do Chats Here.Do chats here</div>
-                    <div class="msgs-div">Do Chats Here.Do chats here</div>
-                    <div class="msgs-div">Do Chats Here.Do chats here</div>
-                    <div class="msgs-div">Do Chats Here.Do chats here</div>
-                    <div class="msgs-div">Do Chats Here.Do chats here</div>
-                    <div class="msgs-div">Do Chats Here.Do chats here</div>
+            <div class="container chat-container chatContainer col-md-9 bg bg-dark">
+                <!-- <navbar class="headerofnav d-flex justify-content-between"> -->
+                <!-- <button class="btn btn-dark headerofnav" id="grp-name"></button> -->
+                <button type="button" class="btn btn-dark headerofnav group-details-button" id="grp-name"
+                    data-bs-toggle="modal" data-bs-target="#groupDetailsModal">
+
+                </button>
+
+                <!-- <h4 id="grp-name"></h4> -->
+                <!-- </navbar> -->
+
+                <div id="msgBox" class="container-fluid msg-Box">
 
                 </div>
                 <form>
@@ -107,10 +92,11 @@
                     <button type="submit" class="btn btn-primary msg-btn" id="sendchat">Send</button>
                 </form>
             </div>
+
         </div>
     </div>
 
-    <!-- Modals are here -->
+    <!-- Modals are here  -->
     <div class="modal fade" id="createGroupModal" tabindex="-1" aria-labelledby="createGroupModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
@@ -125,7 +111,7 @@
                         <input type="text" class="form-control" id="groupName" placeholder="Enter group name" required>
 
                         <label for="selectUser">Add Users</label>
-                        <select multiple  id="selectUser" required>
+                        <select multiple id="selectUser" required>
 
                         </select>
 
@@ -135,6 +121,30 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary" onclick="createGroup()">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--  -->
+    <div class="modal fade" id="groupDetailsModal" tabindex="-1" aria-labelledby="groupDetailsModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title text-dark " id="groupDetailsModalLabel"></h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Members:</p>
+                    <ul id="usersInfo">
+                        
+                        <!-- Add more members as needed -->
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="editGroupDetails()">Edit Group</button>
                 </div>
             </div>
         </div>

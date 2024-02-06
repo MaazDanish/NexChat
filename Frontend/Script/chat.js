@@ -1,11 +1,13 @@
 var sendChat = document.getElementById('sendchat');
+// const currentGroup = null;
 
 sendChat.addEventListener('click', async () => {
     try {
         var chat = document.getElementById('chat-input');
         const headers = { 'authorization': localStorage.getItem('token') };
+
         const chats = { chat: chat.value };
-        let response = await axios.post('http://localhost:4106/nexchat/chats/send-msg', chats, { headers });
+        let response = await axios.post('http://localhost:4106/nexchat/chats/send-group-msg', chats, { headers });
         chat.value = '';
     } catch (err) {
         console.log(err);
@@ -65,18 +67,19 @@ window.addEventListener('DOMContentLoaded', async () => {
         // console.log(grp.data);
 
         const users = await axios.get('http://localhost:4106/nexchat/user/get-all-user', { headers });
-        console.log(users.data);
+        // console.log(users.data);
         saveUserForaddingInGroup(users.data);
 
         const groupId = "0c942811-9f99-4c00-bdbf-dee32d0f5496";
 
-        console.log(groupId);
+        // console.log(groupId);
         const usersInAGroup = await axios.get('http://localhost:4106/nexchat/group/get-all-group-users', {
             params: {
                 groupId: groupId
             }
         });
-        console.log(usersInAGroup.data[0].users);
+        // displayGroupDetails(usersInAGroup.data, grp)
+        // console.log(usersInAGroup.data[0].users);
     } catch (err) {
         console.log(err);
     }
@@ -85,10 +88,10 @@ window.addEventListener('DOMContentLoaded', async () => {
 function saveUserForaddingInGroup(user) {
     var selectUser = document.getElementById('selectUser');
 
-    console.log(user.users);
+    // console.log(user.users);
 
     for (var i = 0; i < user.users.length; i++) {
-        console.log(user.users[i].name, user.users[i].id);
+        // console.log(user.users[i].name, user.users[i].id);
         var option = document.createElement('option');
         option.value = user.users[i].id;
         option.text = user.users[i].name;
@@ -106,53 +109,95 @@ function displayUserInformation(user) {
     `
 }
 
+async function displayGroupDetails(groupId, groupName) {
+    try {
+
+        var groupDetailsModalLabel = document.getElementById('groupDetailsModalLabel');
+        var usersInfo = document.getElementById('usersInfo');
+
+        const usersInAGroup = await axios.get('http://localhost:4106/nexchat/group/get-all-group-users', {
+            params: {
+                groupId: groupId
+            }
+        });
+        const users = usersInAGroup.data[0].users;
+        usersInfo.innerHTML = '';
+        users.forEach(user => {
+            const li = document.createElement('li');
+            li.textContent = user.name;
+            usersInfo.appendChild(li);
+        });
+        // console.log(usersInAGroup.data[0]);
+        // console.log(groupName);
+        groupDetailsModalLabel.textContent = groupName;
+    } catch (err) {
+        console.log(err);
+    }
+
+}
+
 function displayGroupList(grp) {
     const parent = document.getElementById('groupList');
     parent.innerHTML = '';
-
-
-
     for (var i = 0; i < grp.length; i++) {
-        // console.log(grp[i].name);
+        // console.log(grp[i].id);
         const li = document.createElement('li');
+        li.setAttribute('group-id', grp[i].id);
         li.textContent = `${grp[i].name}`;
+        const currentGroup = grp[i];
+        li.onclick = function () {
+            // console.log(currentGroup.id);
+            // console.log(li.getAttribute('group-id'));
+            fetchMsg(currentGroup.id, currentGroup.name)
+            displayGroupDetails(currentGroup.id, currentGroup.name);
+        }
         parent.appendChild(li);
     }
 
 }
+
 
 function scrollToBottom() {
     var chatContainer = document.getElementsByClassName("chatContainer");
     chatContainer[0].scrollTop = chatContainer[0].scrollHeight;
 }
 
-async function fetchMsg() {
+async function fetchMsg(grpId, groupName) {
     try {
 
         const headers = { 'authorization': localStorage.getItem('token') };
+        var msgBox = document.getElementById('msgBox');
 
-        // const users = await axios.get('http://localhost:4106/nexchat/user/get-all-user', { headers });
+        var grpname = document.getElementById('grp-name');
 
-        let messages = JSON.parse(localStorage.getItem('msg'));
 
-        if (messages) {
-            const last = 0;
-            // console.log(last);
-            const chat = await axios.get(`http://localhost:4106/nexchat/chats/get-all-msg?last=${last}`);
-            const msg = localStorage.setItem('msg', JSON.stringify(chat.data.messages));
-            showMsg(messages);
 
-        } else {
-            last = messages[messages.length - 1].id;
-            const chat = await axios.get(`http://localhost:4106/nexchat/chats/get-all-msg?last=${last}`);
-            const msg = localStorage.setItem('msg', JSON.stringify(chat.data.messages));
-            showMsg(messages);
-            // console.log(chat);
-            // console.log(last);
+        grpname.textContent = groupName;
+
+        const groupMessages = await axios.get('http://localhost:4106/nexchat/chats/get-group-msg', { params: { groupId } })
+
+        msgBox.innerHTML = ''
+
+        for (var i = 0; i < groupMessages.data.message.length; i++) {
+            // console.log(groupMessages.data.message[i].chat);
+            var div = document.createElement('div');
+            div.className = 'msgs-div';
+            div.textContent = `${groupMessages.data.message[i].chat}`;
+            msgBox.appendChild(div);
         }
-        // console.log(last, 'id of last masg in local storage');
+        // if (messages) {
+        //     const last = 0;
+        //     // console.log(last);
+        //     const chat = await axios.get(`http://localhost:4106/nexchat/chats/get-all-msg?last=${last}`);
+        //     const msg = localStorage.setItem('msg', JSON.stringify(chat.data.messages));
+        //     showMsg(messages);
 
-
+        // } else {
+        //     last = messages[messages.length - 1].id;
+        //     const chat = await axios.get(`http://localhost:4106/nexchat/chats/get-all-msg?last=${last}`);
+        //     const msg = localStorage.setItem('msg', JSON.stringify(chat.data.messages));
+        //     showMsg(messages);
+        // }
     } catch (err) {
         console.log(err);
     }
@@ -163,35 +208,35 @@ async function fetchMsg() {
 // }, 1000)
 
 
-function showMsg(messages) {
-    try {
+// function showMsg(messages) {
+//     try {
 
-        // let message = JSON.parse(localStorage.getItem('msg'));
-        // console.log(messages);
-        // console.log(user);
-        var masgBox = document.getElementById('msgBox');
-        masgBox.innerHTML = ''
+//         // let message = JSON.parse(localStorage.getItem('msg'));
+//         // console.log(messages);
+//         // console.log(user);
+//         var masgBox = document.getElementById('msgBox');
+//         masgBox.innerHTML = ''
 
-        for (let i = 0; i < messages.length; i++) {
-
-
-            const div = document.createElement('div');
-            div.textContent = `${messages[i].chat}`;
-            div.classList = 'msgs-div';
-            masgBox.appendChild(div);
-            scrollToBottom();
-        }
+//         for (let i = 0; i < messages.length; i++) {
 
 
-    } catch (err) {
-        console.log(err);
-    }
-}
+//             const div = document.createElement('div');
+//             div.textContent = `${messages[i].chat}`;
+//             div.classList = 'msgs-div';
+//             masgBox.appendChild(div);
+//             scrollToBottom();
+//         }
+
+
+//     } catch (err) {
+//         console.log(err);
+//     }
+// }
 
 var logout = document.getElementById('logout');
 
 logout.addEventListener('click', () => {
-
+    console.log('loggging out');
     localStorage.removeItem('token');
     window.location.href = './home.html';
 

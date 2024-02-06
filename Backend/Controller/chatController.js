@@ -23,9 +23,10 @@ exports.PostChat = async (req, res, next) => {
 
 exports.PostGroupChat = async (req, res, next) => {
     try {
+
         const { groupId, memberId, chat } = req.body;
         // const id = groupId;
-        console.log(groupId, memberId, chat, 'TESTING IN POST CHAT CONTROLLER');
+        // console.log(groupId, memberId, chat, 'TESTING IN POST CHAT CONTROLLER');
 
         // const member = await Member.findOne({ groupId, id: memberId });
         // console.log(member);
@@ -39,7 +40,7 @@ exports.PostGroupChat = async (req, res, next) => {
 
         // const group = await Group.findByPk(id);
 
-        console.log(msg);
+        // console.log(msg);
 
         return res.status(203).json({ success: true, msg })
 
@@ -55,8 +56,10 @@ exports.PostGroupChat = async (req, res, next) => {
 exports.getGroupChat = async (req, res, next) => {
     try {
         // const userId = req.decoded_UserId.userId;
-        const id = req.body.groupId;
+        const id = req.query.groupId;
+        console.log(id);
         const group = await Group.findByPk(id);
+        console.log(group);
         if (group) {
             const message = await Chat.findAll({ where: { groupId: id } })
             return res.status(200).json({ success: true, msg: "successfully fecthed", message });

@@ -2,19 +2,22 @@
     margin-top: 20px;
     text-align: center;
 } */
-
-li:nth-child(even) {
+* {
+    box-sizing: border-box;
+  }
+  
+  li:nth-child(even) {
     margin-top: 2px;
     list-style-type: none;
     /* background-color: rgb(255, 241, 241);
-    */
+      */
     background-color: rgb(55, 55, 55);
     color: rgb(255, 255, 255);
     border-radius: 15px;
     padding: 10px 10px;
-}
-
-li:nth-child(odd) {
+  }
+  
+  li:nth-child(odd) {
     margin-top: 2px;
     list-style-type: none;
     background-color: rgb(55, 55, 55);
@@ -22,107 +25,109 @@ li:nth-child(odd) {
     color: rgb(255, 255, 255);
     padding: 10px 10px;
     border-radius: 15px;
-}
-
-.msg-input {
-    position: absolute;
-    bottom: 1px;
-    margin-left: -13px;
-    width: 950px;
+  }
+  form {
+    display: flex;
+  }
+  .msg-input {
+    margin: 0 10px;
+    border-radius: 5px;
+    width: 90%;
     padding: 5px 10px;
-
-}
-
-.msg-btn {
-    position: absolute;
-    width: 120px;
-    bottom: 1px;
-    right: 0px;
-    border: none;
-}
-
-nav span {
+  }
+  
+  .msg-btn {
+    width: 10%;
+  }
+  
+  nav span {
     margin-left: 20px;
     font-size: 20px;
-}
-
-.chat-container {
-    overflow-y: auto;
-    max-height: 570px;
+  }
+  
+  .chat-container {
+    position: relative;
+    display: grid;
+    grid-template-rows: 80px auto 50px;
+    gap: 1%;
+    max-height: inherit;
+    width: 100%;
+    /* max-height: 570px; */
     border: 3px solid rgb(255, 0, 43);
-}
-
-.msgs-div {
+  }
+  
+  .left-side {
+    display: grid;
+    grid-template-rows: 80px auto;
+    width: 100%;
+    max-height: inherit;
+  }
+  .grp-list {
+    overflow-y: auto;
+  }
+  .msgs-div {
     display: block;
-    margin: 3px;
+    padding: 10px;
+    margin: 5px;
     width: fit-content;
     background-color: rgb(55, 55, 55);
-    padding: 10px 20px;
     border-radius: 50px;
     /* border: 1px solid red; */
     color: white;
-}
-
-.grp-list {
+  }
+  
+  .grp-list {
     overflow-y: auto;
-    max-height: 536px;
+    /* max-height: 536px; */
     border-radius: 10px;
-}
-
-.creatGroup-button {
-    width: 330px;
-}
-
-
-.headerofnav {
-    width: 74%;
-    margin-left: -12px;
-    display: block;
-    position: fixed;
-    top: 52px;
-    background-color: rgb(31, 31, 31);
-
-}
-
-.headerofnav h4 {
-    background-color: rgb(31, 31, 31);
+  }
+  
+  .headerofnav {
+    /* margin-bottom: 4px; */
+    width: 100%;
+    margin: 0px -12px;
+    /* display: flex; */
+    /* align-items: center; */
+    /* background-color: rgb(31, 31, 31); */
+    font-size: 35px;
+    font-weight: bolder;
+    /* background-color: black; */
+    background-color: #272b2d;
+  }
+/*   
+  .headerofnav h4 {
     padding: 10px;
     padding-left: 80px;
-    font-weight: bolder;
     color: white;
-}
-
-.headerofnav button {
+  }
+   */
+  /* .headerofnav button {
     width: 80px;
     height: 40px;
     margin-top: 8px;
     margin-right: 50px;
     font-weight: bolder;
-}
-
-.bg-light {
+  } */
+  
+  .bg-light {
     background-color: #e3f2fd;
-}
-
-/* Background color for the right section (Chat Window) */
-/* .chat-container {
-    background-color: #b6f9af;
-} */
-
-/* Background color for the footer with the input field */
-.footer {
+  }
+  
+  /* Background color for the right section (Chat Window) */
+  /* .chat-container {
+      background-color: #b6f9af;
+  } */
+  
+  /* Background color for the footer with the input field */
+  .footer {
     background-color: #e0e0e0;
-}
-
-.design-structure {
-    max-height: 652px;
-}
-
-.bg {
+  }
+  
+  .bg {
     border: 1px solid white;
-}
-
-.notification-style {
+  }
+  
+  .notification-style {
     background-color: rgb(255, 223, 223);
     width: fit-content;
     display: inline-block;
@@ -131,8 +136,23 @@ nav span {
     padding: 5px 10px;
     border-radius: 15px;
     color: rgb(255, 0, 0);
-}
-
-h3 {
+  }
+  
+  h3 {
     color: white;
-}
+  }
+  
+  .msg-Box {
+    overflow-y: auto;
+  }
+  
+  .parentElemet {
+    display: grid;
+    grid-template-columns: 400px auto;
+    background-color: black;
+    max-height: calc(100vh - 53.6px);
+  }
+  
+  .grp {
+    overflow-y: auto;
+  }
