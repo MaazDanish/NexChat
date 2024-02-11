@@ -66,28 +66,27 @@
                     data-bs-target="#createGroupModal">Create Group</button>
 
                 <h3>Groups</h3>
-                <ul class="list-group grp-list group-List grp" id="groupList">
-
+                <ul class="grp-list " id="groupList">
                     <!-- Dynamically add group names here -->
                 </ul>
             </div>
 
             <!-- Right Section for Chat Window -->
-            <div class="container chat-container chatContainer col-md-9 bg bg-dark">
+            <div class="container chat-container chatContainer col-md-9  bg-dark">
                 <!-- <navbar class="headerofnav d-flex justify-content-between"> -->
                 <!-- <button class="btn btn-dark headerofnav" id="grp-name"></button> -->
-                <button type="button" class="btn btn-dark headerofnav group-details-button" id="grp-name"
-                    data-bs-toggle="modal" data-bs-target="#groupDetailsModal">
+                <button type="button" class="btn btn-dark headerofnav" id="grp-name" data-bs-toggle="modal"
+                    data-bs-target="#groupDetailsModal">
 
                 </button>
 
                 <!-- <h4 id="grp-name"></h4> -->
                 <!-- </navbar> -->
 
-                <div id="msgBox" class="container-fluid msg-Box">
+                <div id="msg-Box" class="container-fluid msg-Box">
 
                 </div>
-                <form>
+                <form class="form">
                     <input type="text" class="msg-input" id="chat-input" placeholder="Type Your message here">
                     <button type="submit" class="btn btn-primary msg-btn" id="sendchat">Send</button>
                 </form>
@@ -138,15 +137,31 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Members:</p>
-                    <ul id="usersInfo">
+                    <div id="memberListSection">
+                        <p>Members:</p>
+                        <ul id="usersInfo" class="MembersInAgroup">
+                            <!-- Add more members as needed -->
+                        </ul>
+                        <span id="remove-notification"></span>
+                    </div>
+                    <div id="addUserSection" style="display: none;">
+                        <form onsubmit="addMoreUser(event)">
+                            <label for="selectAllUser">Add Users</label>
+                            <select multiple id="selectAllUser" required>
+                                <!-- <option> Will append from js </option> -->
+                            </select>
+                            <button type="submit" class="btn btn-primary mt-3" id="addmoreusers">Add</button>
+                        </form>
+                        <div id="notification-two"></div>
 
-                        <!-- Add more members as needed -->
-                    </ul>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="editGroupDetails()">Edit Group</button>
+                    <button type="button" class="btn btn-primary" id="addButton+"
+                        onclick="toggleAddUserSection()">+</button>
+                    <!-- <button type="button" class="btn btn-primary" onclick="editGroupDetails()">remove user</button> -->
+                    <!--<button type="button" class="btn btn-primary" onclick="editGroupDetails()">add user</button> -->
                 </div>
             </div>
         </div>

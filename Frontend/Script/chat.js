@@ -1,3 +1,5 @@
+// const { options } = require("../../Backend/Routes/userRoutes");
+
 var sendChat = document.getElementById('sendchat');
 // const currentGroup = null;
 
@@ -62,7 +64,9 @@ window.addEventListener('DOMContentLoaded', async () => {
     try {
         // console.log('hiiiii');
         const headers = { 'authorization': localStorage.getItem('token') };
+        // console.log(headers.authorization);
         const user = await axios.get('http://localhost:4106/nexchat/user/getUserInfo', { headers });
+        // console.log(user);
         displayUserInformation(user.data)
         // fetchMsg();
 
@@ -71,19 +75,10 @@ window.addEventListener('DOMContentLoaded', async () => {
         // console.log(grp.data);
 
         const users = await axios.get('http://localhost:4106/nexchat/user/get-all-user', { headers });
-        // console.log(users.data);
+
+        // console.log(users.data.users);
         saveUserForaddingInGroup(users.data);
-
-        const groupId = "0c942811-9f99-4c00-bdbf-dee32d0f5496";
-
-        // console.log(groupId);
-        const usersInAGroup = await axios.get('http://localhost:4106/nexchat/group/get-all-group-users', {
-            params: {
-                groupId: groupId
-            }
-        });
-        // displayGroupDetails(usersInAGroup.data, grp)
-        // console.log(usersInAGroup.data[0].users);
+        // toggleAddUserSection(users.data);
     } catch (err) {
         console.log(err);
     }
@@ -93,7 +88,6 @@ function saveUserForaddingInGroup(user) {
     var selectUser = document.getElementById('selectUser');
 
     // console.log(user.users);
-
     for (var i = 0; i < user.users.length; i++) {
         // console.log(user.users[i].name, user.users[i].id);
         var option = document.createElement('option');
@@ -101,11 +95,12 @@ function saveUserForaddingInGroup(user) {
         option.text = user.users[i].name;
         selectUser.appendChild(option);
     }
-
+    // toggleAddUserSection(user);
 
 }
 
 function displayUserInformation(user) {
+    localStorage.setItem('userId', user.id)
     document.getElementById('userInfo').innerHTML = `
     <p class="text-color"><h5>Name</h5> ${user.name}  </p>
     <p class="text-color"><h5>Email</h5> ${user.email}</p>
@@ -113,9 +108,8 @@ function displayUserInformation(user) {
     `
 }
 
-async function displayGroupDetails(groupId, groupName) {
+async function displayGroupDetails(groupId, groupName, group) {
     try {
-
         var groupDetailsModalLabel = document.getElementById('groupDetailsModalLabel');
         var usersInfo = document.getElementById('usersInfo');
 
@@ -124,45 +118,96 @@ async function displayGroupDetails(groupId, groupName) {
                 groupId: groupId
             }
         });
+
         const users = usersInAGroup.data[0].users;
+        // console.log(users);
         usersInfo.innerHTML = '';
         users.forEach(user => {
             const li = document.createElement('li');
+            li.className = 'group-li py-2';
             li.textContent = user.name;
+
+            const X = document.createElement('button');
+            X.className = 'btn btn-danger xtra-style removeUser';
+            X.value = user.id;
+            X.textContent = 'X';
+            X.addEventListener('click', () => removeUser(user.id, groupId));
+            if (group.member.admin === true) {
+                li.appendChild(X);
+            }
             usersInfo.appendChild(li);
         });
         // console.log(usersInAGroup.data[0]);
         // console.log(groupName);
         groupDetailsModalLabel.textContent = groupName;
+
+
+        // console.log(group.member.admin);
+        if (group.member.admin !== true) {
+            document.getElementById("addButton+").style.display = "none";
+        } else {
+            document.getElementById("addButton+").style.display = "block";
+            // document.getElementsByClassName('removeUser').style.display = 'block';
+
+        }
+
+
     } catch (err) {
         console.log(err);
     }
 
 }
 
+//
+async function removeUser(userId, groupId) {
+    try {
+        // console.log(userId, groupId);
+        // console.log('Hello This is remove user function');
+
+        const body = {
+            userId: userId,
+            groupId: groupId
+        }
+
+        var removenotification = document.getElementById('remove-notification');
+
+
+        const removeUser = await axios.post('http://localhost:4106/nexchat/group/remove-user', body);
+        // console.log(removeUser);
+        if (removeUser.status === 200) {
+            removenotification.className = 'remove-notification';
+            removenotification.textContent = 'User is removed.Go Back';
+        }
+
+    } catch (er) {
+
+    }
+}
+
 function displayGroupList(grp) {
     const parent = document.getElementById('groupList');
+    // console.log(grp);
     parent.innerHTML = '';
     for (var i = 0; i < grp.length; i++) {
         // console.log(grp[i].id);
         const li = document.createElement('li');
-        li.setAttribute('group-id', grp[i].id);
+        // li.setAttribute('group-id', grp[i].id);
+        li.className = 'group-li'
         li.textContent = `${grp[i].name}`;
         const currentGroup = grp[i];
         li.onclick = function () {
             // console.log(currentGroup.id);
             // console.log(li.getAttribute('group-id'));
             // setInterval(() => {
-    
+
             // }, 1000)
             fetchMsg(currentGroup.id, currentGroup.name)
-            displayGroupDetails(currentGroup.id, currentGroup.name);
+            displayGroupDetails(currentGroup.id, currentGroup.name, currentGroup);
         }
         parent.appendChild(li);
     }
 
 }
-
 
 function scrollToBottom() {
     var chatContainer = document.getElementsByClassName("chatContainer");
@@ -184,16 +229,10 @@ async function fetchMsg(grpId, groupName) {
         grpname.textContent = groupName;
 
         const groupMessages = await axios.get('http://localhost:4106/nexchat/chats/get-group-msg', { params: { groupId: grpId } })
+        // console.log(groupMessages);
+        showMsg(groupMessages)
 
-        msgBox.innerHTML = ''
 
-        for (var i = 0; i < groupMessages.data.message.length; i++) {
-            // console.log(groupMessages.data.message[i].chat);
-            var div = document.createElement('div');
-            div.className = 'msgs-div';
-            div.textContent = `${groupMessages.data.message[i].chat}`;
-            msgBox.appendChild(div);
-        }
         // if (messages) {
         //     const last = 0;
         //     // console.log(last);
@@ -215,36 +254,127 @@ async function fetchMsg(grpId, groupName) {
 
 
 
-// function showMsg(messages) {
-//     try {
+function showMsg(messages) {
+    try {
+        var msgBox = document.getElementById('msg-Box');
 
-//         // let message = JSON.parse(localStorage.getItem('msg'));
-//         // console.log(messages);
-//         // console.log(user);
-//         var masgBox = document.getElementById('msgBox');
-//         masgBox.innerHTML = ''
+        msgBox.innerHTML = ''
 
-//         for (let i = 0; i < messages.length; i++) {
+        for (var i = 0; i < messages.data.message.length; i++) {
+
+            // console.log(messages.data.message[i].member.userId, 'all user id');
+
+            var li = document.createElement('span');
+
+            const userId = Number(localStorage.getItem('userId'));
+            // console.log(typeof (userId), 'testing logging user id');
+
+            if (userId === messages.data.message[i].member.userId) {
+                li.classList.add('msgs-div', 'text-end');
+                li.textContent = `You : ${messages.data.message[i].chat}`;
+
+            } else {
+                li.classList.add('msgs-div', 'text-start');
+                li.textContent = `${messages.data.message[i].chat}`;
+            }
+
+            msgBox.appendChild(li);
+
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
 
 
-//             const div = document.createElement('div');
-//             div.textContent = `${messages[i].chat}`;
-//             div.classList = 'msgs-div';
-//             masgBox.appendChild(div);
-//             scrollToBottom();
-//         }
+async function editGroupDetails() {
+    try {
+
+        console.log(groupId);
+
+    } catch (err) {
+        console.log(err);
+
+    }
+}
+
+// Toggling modals body from member list to add user section
+async function toggleAddUserSection() {
+    try {
+        const addUserSection = document.getElementById('addUserSection');
+        const addButton = document.getElementById('addButton+');
+        const selectAllUser = document.getElementById('selectAllUser');
+        const groupId = localStorage.getItem('groupId');
+
+        if (memberListSection.style.display === 'none') {
+            memberListSection.style.display = 'block';
+            addUserSection.style.display = 'none';
+            addButton.textContent = '+';
+        } else {
+            memberListSection.style.display = 'none';
+            addUserSection.style.display = 'block';
+            addButton.textContent = '<--';
+
+        }
+        selectAllUser.innerHTML = '';
+        const allUser = await axios.get(`http://localhost:4106/nexchat/user/get-more-users/${groupId}`);
+        for (var i = 0; i < allUser.data.length; i++) {
+            // console.log(allUser.data[i]);
+            var option = document.createElement('option');
+            option.value = allUser.data[i].id;
+            option.text = allUser.data[i].name;
+            selectAllUser.appendChild(option);
+        }
 
 
-//     } catch (err) {
-//         console.log(err);
-//     }
-// }
+    } catch (err) {
+        console.log(err);
+    }
+
+    // console.log(users);
+}
+
+async function addMoreUser(event) {
+    try {
+
+        event.preventDefault();
+        const notification = document.getElementById('notification-two');
+
+        const selectAllUser = document.getElementById('selectAllUser');
+
+        const groupId = localStorage.getItem('groupId');
+        const selectedUsers = Array.from(selectAllUser.selectedOptions).map(option => option.value);
+        // console.log(selectedUsers);
+
+        const body = {
+            groupId: groupId,
+            users: selectedUsers
+        }
+
+
+        const users = await axios.post(`http://localhost:4106/nexchat/group/add-more-user`, body);
+        // console.log(users.status);
+        if (users.status === 200) {
+            notification.className = 'notification-style';
+            notification.textContent = `User is Added Succesfullly.Go back`;
+        }
+        // console.log(users);
+    } catch (err) {
+        console.log(err);
+    }
+
+
+
+
+}
 
 var logout = document.getElementById('logout');
 
 logout.addEventListener('click', () => {
     console.log('loggging out');
     localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('users');
+    localStorage.removeItem('groupId');
     window.location.href = './home.html';
-
 })

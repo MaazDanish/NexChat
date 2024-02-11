@@ -1,8 +1,10 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
 const sequelize = require('sequelize')
+const { Sequelize } = require('sequelize');
 
 const User = require('../Models/userModel');
+const Group = require('../Models/Group');
 
 exports.SignUpUser = async (req, res, next) => {
     try {
@@ -43,9 +45,9 @@ exports.SignIn = async (req, res, next) => {
             const payload = {
                 userId: user.id
             }
-            
+
             let token = jwt.sign(payload, process.env.SECRET_KEY);
-            console.log(token,'token');
+            // console.log(token, 'token');
             // console.log(token);
 
             return res.status(200).json({ success: true, message: 'User login Successfull', token: token })
@@ -66,7 +68,12 @@ exports.getUserInformation = async (req, res, next) => {
         const userId = req.decoded_UserId.userId;
         // console.log(userId);
 
-        const user = await User.findOne({ where: { id: userId } });
+        const user = await User.findOne({
+            where: {
+                id: userId
+            },
+            attributes: ['id', 'name', 'phoneNumber', 'email']
+        });
 
         if (!user) {
             return res.status(409).json({ message: "User does not exist", success: false });
@@ -89,12 +96,42 @@ exports.getAllUsers = async (req, res, next) => {
                     [sequelize.Op.ne]: req.decoded_UserId.userId
                 }
             },
-            attributes: ['name','id']
+            attributes: ['name', 'id']
 
         });
 
         res.status(200).json({ message: 'successfull', users })
     } catch (err) {
         console.log(err);
+        res.status(500).json(err);
+    }
+}
+// getting users for adding in agroup where memvbers already added.so here we will filter those mebers
+exports.getMoreUsers = async (req, res, next) => {
+    try {
+        // console.log('hiiiiiiiiiiiiiiiii');
+        const groupId = req.params.groupId;
+        console.log(groupId);
+        // const user = req.decoded_UserId.userId;
+        const group = await Group.findOne({ where: { id: groupId } })
+        const users = await group.getUsers();
+        const userId = users.map(user => user.id);
+        console.log(userId);
+
+        const allUser = await User.findAll({
+            where: {
+                id: {
+                    [Sequelize.Op.notIn]: userId
+                }
+            },
+            attributes: {
+                exclude: ['createdAt', 'updatedAt', 'password', 'phoneNumber', 'email']
+            }
+        })
+        console.log(allUser);
+        res.status(200).json(allUser);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(err);
     }
 }
