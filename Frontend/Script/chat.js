@@ -1,8 +1,30 @@
-// const { options } = require("../../Backend/Routes/userRoutes");
+// DOM CONTENT LOADED
+window.addEventListener('DOMContentLoaded', async () => {
+    try {
+        // console.log('hiiiii');
+        const headers = { 'authorization': localStorage.getItem('token') };
+        // console.log(headers.authorization);
+        const user = await axios.get('http://localhost:4106/nexchat/user/getUserInfo', { headers });
+        // console.log(user);
+        displayUserInformation(user.data)
+        // fetchMsg();
 
+        const grp = await axios.get('http://localhost:4106/nexchat/group/get-groups', { headers });
+        displayGroupList(grp.data);
+        // console.log(grp.data);
+
+        const users = await axios.get('http://localhost:4106/nexchat/user/get-all-user', { headers });
+
+        // console.log(users.data.users);
+        saveUserForaddingInGroup(users.data);
+        // toggleAddUserSection(users.data);
+    } catch (err) {
+        console.log(err);
+    }
+})
+
+// SENDING MESSAGES
 var sendChat = document.getElementById('sendchat');
-// const currentGroup = null;
-
 sendChat.addEventListener('click', async () => {
     try {
         var chat = document.getElementById('chat-input');
@@ -20,7 +42,7 @@ sendChat.addEventListener('click', async () => {
     }
 })
 
-
+// CREATING GROUP
 async function createGroup() {
     try {
 
@@ -60,30 +82,7 @@ async function createGroup() {
     }
 }
 
-window.addEventListener('DOMContentLoaded', async () => {
-    try {
-        // console.log('hiiiii');
-        const headers = { 'authorization': localStorage.getItem('token') };
-        // console.log(headers.authorization);
-        const user = await axios.get('http://localhost:4106/nexchat/user/getUserInfo', { headers });
-        // console.log(user);
-        displayUserInformation(user.data)
-        // fetchMsg();
-
-        const grp = await axios.get('http://localhost:4106/nexchat/group/get-groups', { headers });
-        displayGroupList(grp.data);
-        // console.log(grp.data);
-
-        const users = await axios.get('http://localhost:4106/nexchat/user/get-all-user', { headers });
-
-        // console.log(users.data.users);
-        saveUserForaddingInGroup(users.data);
-        // toggleAddUserSection(users.data);
-    } catch (err) {
-        console.log(err);
-    }
-})
-
+// ASSIGNING USER FRO ADDING IN GROUP
 function saveUserForaddingInGroup(user) {
     var selectUser = document.getElementById('selectUser');
 
@@ -99,6 +98,7 @@ function saveUserForaddingInGroup(user) {
 
 }
 
+//  DISPLAYING THE  USERS INFO 
 function displayUserInformation(user) {
     localStorage.setItem('userId', user.id)
     document.getElementById('userInfo').innerHTML = `
@@ -108,6 +108,7 @@ function displayUserInformation(user) {
     `
 }
 
+// DISPLAYING GROUP DEATILS LIKE GROUP NAME , ADMIN , MEMBERS IN IT
 async function displayGroupDetails(groupId, groupName, group) {
     try {
         var groupDetailsModalLabel = document.getElementById('groupDetailsModalLabel');
@@ -158,7 +159,7 @@ async function displayGroupDetails(groupId, groupName, group) {
 
 }
 
-//
+// REMOVING USER BY ADMIN IN AGROUP
 async function removeUser(userId, groupId) {
     try {
         // console.log(userId, groupId);
@@ -184,6 +185,7 @@ async function removeUser(userId, groupId) {
     }
 }
 
+// DISPLAYTING GROUP LIST 
 function displayGroupList(grp) {
     const parent = document.getElementById('groupList');
     // console.log(grp);
@@ -209,11 +211,13 @@ function displayGroupList(grp) {
 
 }
 
+// AUTOMATIC SCROLL BOTTOM WHEN USERS CHATS 
 function scrollToBottom() {
     var chatContainer = document.getElementsByClassName("chatContainer");
     chatContainer[0].scrollTop = chatContainer[0].scrollHeight;
 }
 
+// FETCHING MESSAGES FROM BACKEND
 async function fetchMsg(grpId, groupName) {
     try {
 
@@ -253,7 +257,7 @@ async function fetchMsg(grpId, groupName) {
 
 
 
-
+// DISPLAY THE MESSAGES TO THE SCREEN
 function showMsg(messages) {
     try {
         var msgBox = document.getElementById('msg-Box');
@@ -298,7 +302,7 @@ async function editGroupDetails() {
     }
 }
 
-// Toggling modals body from member list to add user section
+// TOGGLING MODELS BODY OF A GROUP HEADER - MEMBER LIST <-----> INPUT LIST
 async function toggleAddUserSection() {
     try {
         const addUserSection = document.getElementById('addUserSection');
@@ -334,6 +338,7 @@ async function toggleAddUserSection() {
     // console.log(users);
 }
 
+// ADDING MORE USER BY ADMIN
 async function addMoreUser(event) {
     try {
 
@@ -363,18 +368,16 @@ async function addMoreUser(event) {
         console.log(err);
     }
 
-
-
-
 }
 
+// LOGGING OUT THE USERS 
 var logout = document.getElementById('logout');
 
 logout.addEventListener('click', () => {
     console.log('loggging out');
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
-    localStorage.removeItem('users');
+    // localStorage.removeItem('users');
     localStorage.removeItem('groupId');
     window.location.href = './home.html';
 })
