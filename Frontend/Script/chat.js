@@ -131,17 +131,17 @@ async function displayGroupDetails(groupId, groupName, group) {
             li.textContent = user.name;
             // console.log(user.member.admin);
             const makeAdmin = document.createElement('button');
-            makeAdmin.className = 'btn btn-primary makeAdmin ';
+            makeAdmin.className = 'btn btn-light makeAdmin ';
             makeAdmin.textContent = "Make Admin";
             makeAdmin.addEventListener("click", () => makeAdmins(user.id, user.name, groupId));
 
             const removeAdmin = document.createElement('button');
-            removeAdmin.className = 'btn btn-primary removeAdmin ';
+            removeAdmin.className = 'btn btn-light removeAdmin ';
             removeAdmin.textContent = "Remove Admin";
             removeAdmin.addEventListener("click", () => removeAdmins(user.id, user.name, groupId));
 
             const X = document.createElement('button');
-            X.className = 'btn btn-primary xtra-style removeUser';
+            X.className = 'btn btn-danger xtra-style removeUser';
             X.value = user.id;
             X.textContent = 'X';
             X.addEventListener("click", () => removeUser(user.id, groupId));
@@ -363,10 +363,18 @@ async function fetchMsg(grpId, groupName) {
         var grpname = document.getElementById('grp-name');
         grpname.textContent = groupName;
 
+        const usersInAGroup = await axios.get('http://localhost:4106/nexchat/group/get-all-group-users', {
+            params: {
+                groupId: grpId
+            }
+        });
+
+        // console.log(usersInAGroup.data.users);
+
         const groupMessages = await axios.get('http://localhost:4106/nexchat/chats/get-group-msg', { params: { groupId: grpId } })
         // console.log(groupMessages);
         // console.log(groupMessages.data.message[0].member.userId);
-        showMsg(groupMessages)
+        showMsg(groupMessages, usersInAGroup.data.users)
 
 
         // if (messages) {
@@ -390,12 +398,14 @@ async function fetchMsg(grpId, groupName) {
 
 
 // DISPLAY THE MESSAGES TO THE SCREEN
-function showMsg(messages) {
+function showMsg(messages, users) {
     try {
         var msgBox = document.getElementById('msg-Box');
-
+        console.log(users);
         msgBox.innerHTML = ''
+
         // console.log(messages.data[0].member.userId);
+
         for (var i = 0; i < messages.data.length; i++) {
 
             // console.log(messages.data[i]);
@@ -411,8 +421,11 @@ function showMsg(messages) {
                 li.classList.add('msgs-div', 'text-end');
                 li.textContent = `You : ${messages.data[i].chat}`;
             } else {
+                const u = users.find(user => user.id === messages.data[i].member.userId)
+                console.log(u.name);
                 li.classList.add('msgs-div', 'text-start');
-                li.textContent = `${messages.data[i].chat}`;
+                li.textContent = `${u.name} : ${messages.data[i].chat}`;
+
             }
 
             msgBox.appendChild(li);

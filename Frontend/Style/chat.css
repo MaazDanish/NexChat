@@ -161,7 +161,7 @@ h3 {
   /* Align the delete button vertically at 50% of its parent's height */
   transform: translateY(-50%);
   /* Adjust the position of the delete button vertically to center it */
-  right: 15px;
+  right: 20px;
   border-radius: 50px;
 }
 
@@ -179,7 +179,7 @@ h3 {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  right: 60px;
+  right:80px;
   border-radius: 50px;
 }
 
@@ -201,6 +201,6 @@ h3 {
   /* Align the delete button vertically at 50% of its parent's height */
   transform: translateY(-50%);
   /* Adjust the position of the delete button vertically to center it */
-  right:70px;
+  right:80px;
   border-radius: 50px;
 }

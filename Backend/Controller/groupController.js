@@ -83,7 +83,7 @@ exports.getAllGroupUsers = async (req, res, next) => {
                 exclude: ['createdAt', 'updatedAt', 'password', 'phoneNumber', 'email']
             }
         });
-        console.log(users);
+        // console.log(users);
         res.status(200).json({ users });
 
     } catch (err) {
@@ -95,7 +95,7 @@ exports.getAllGroupUsers = async (req, res, next) => {
 exports.addMoreUser = async (req, res, next) => {
     try {
         const { groupId, users } = req.body;
-        console.log(groupId, users);
+        // console.log(groupId, users);
         const group = await Group.findOne({ where: { id: groupId } });
 
         if (!group) {
@@ -116,7 +116,7 @@ exports.addMoreUser = async (req, res, next) => {
 exports.removeUser = async (req, res, next) => {
     try {
         const { userId, groupId } = req.body;
-        console.log(userId, groupId);
+        // console.log(userId, groupId);
 
         const group = await Group.findOne({ where: { id: groupId } });
 
@@ -128,8 +128,8 @@ exports.removeUser = async (req, res, next) => {
         if (member.dataValues.admin === true) {
             return res.status(408).json({ message: "Admin cannot remove themselves from the group" })
         }
-        const chats =
-            await member.destroy();
+
+        await member.destroy();
         res.status(200).send('Removed successfully');
         // console.log(member.dataValues.admin);
         // res.status(200).json({ success: true });
@@ -142,7 +142,7 @@ exports.removeUser = async (req, res, next) => {
 exports.makeAdmin = async (req, res, next) => {
     try {
         const { userId, userName, groupId } = req.body;
-        console.log(userId, userName);
+        // console.log(userId, userName);
 
         const group = await Group.findOne({ where: { id: groupId } });
         if (!group) {
@@ -164,7 +164,7 @@ exports.makeAdmin = async (req, res, next) => {
 exports.removeAdmin = async (req, res, next) => {
     try {
         const { userId, userName, groupId } = req.body;
-        console.log(userId, userName);
+        // console.log(userId, userName);
 
         const group = await Group.findOne({ where: { id: groupId } });
         if (!group) {
@@ -174,7 +174,7 @@ exports.removeAdmin = async (req, res, next) => {
         if (!member) {
             return res.status(409).json({ success: false, message: 'No member exist ' })
         }
-        
+
         await member.update({ admin: false });
 
         res.status(200).json({ success: true });

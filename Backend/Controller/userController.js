@@ -111,12 +111,12 @@ exports.getMoreUsers = async (req, res, next) => {
     try {
         // console.log('hiiiiiiiiiiiiiiiii');
         const groupId = req.params.groupId;
-        console.log(groupId);
+        // console.log(groupId);
         // const user = req.decoded_UserId.userId;
         const group = await Group.findOne({ where: { id: groupId } })
         const users = await group.getUsers();
         const userId = users.map(user => user.id);
-        console.log(userId);
+        // console.log(userId);
 
         const allUser = await User.findAll({
             where: {
@@ -128,7 +128,7 @@ exports.getMoreUsers = async (req, res, next) => {
                 exclude: ['createdAt', 'updatedAt', 'password', 'phoneNumber', 'email']
             }
         })
-        console.log(allUser);
+        // console.log(allUser);
         res.status(200).json(allUser);
     } catch (err) {
         console.log(err);
