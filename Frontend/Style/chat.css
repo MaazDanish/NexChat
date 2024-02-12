@@ -44,6 +44,17 @@ nav span {
   padding: 10px 15px;
 }
 
+.group-lii {
+  position: relative;
+  margin-top: 6px;
+  margin-left: -30px;
+  list-style-type: none;
+  background-color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
+  border-radius: 15px;
+  padding: 10px 15px;
+}
+
 .MembersInAgroup {
   border-radius: 50px;
 }
@@ -162,4 +173,34 @@ h3 {
   font-weight: bolder;
   font-size: 20px;
   color: red
+}
+
+.makeAdmin {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 60px;
+  border-radius: 50px;
+}
+
+.adminText {
+  position: absolute;
+  /* Position the delete button absolutely within its parent list item */
+  top: 50%;
+  /* Align the delete button vertically at 50% of its parent's height */
+  transform: translateY(-50%);
+  /* Adjust the position of the delete button vertically to center it */
+  right: 15px;
+  border-radius: 50px;
+}
+
+.removeAdmin {
+  position: absolute;
+  /* Position the delete button absolutely within its parent list item */
+  top: 50%;
+  /* Align the delete button vertically at 50% of its parent's height */
+  transform: translateY(-50%);
+  /* Adjust the position of the delete button vertically to center it */
+  right:70px;
+  border-radius: 50px;
 }

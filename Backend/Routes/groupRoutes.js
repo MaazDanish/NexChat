@@ -14,5 +14,7 @@ routes.get('/get-all-group-users', GroupController.getAllGroupUsers);
 // routes.get('/edit-group-details', GroupController.editGroupUsers);
 routes.post('/add-more-user', GroupController.addMoreUser);
 routes.post('/remove-user', GroupController.removeUser);
+routes.post('/make-admin', GroupController.makeAdmin);
+routes.post('/remove-admin', GroupController.removeAdmin);
 
 module.exports = routes;

@@ -48,14 +48,13 @@ exports.PostGroupChat = async (req, res, next) => {
 
 exports.getGroupChat = async (req, res, next) => {
     try {
-        
+
         const id = req.query.groupId;
-       
+
         const group = await Group.findByPk(id);
-       
 
+        console.log(id, 'id is testing');
         if (group) {
-
             const message = await Chat.findAll({
                 where: {
                     groupId: id
@@ -63,14 +62,17 @@ exports.getGroupChat = async (req, res, next) => {
                 include: [
                     {
                         model: Member,
-                        attributes: ['userId'],
-                    }
-                ],
+                        attributes: ['userId']
 
+                    }
+                ]
             });
+            
+            //console.log('chats :>> ', chats);
+            // return res.status(201).json({ success: true, data: ch
             // console.log(message.dataValues[i].memberId);
             // console.log(message);
-            return res.status(200).json({ success: true, msg: "successfully fecthed", message });
+            return res.status(200).json(message);
 
         } else {
 

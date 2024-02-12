@@ -1,3 +1,5 @@
+
+
 // DOM CONTENT LOADED
 window.addEventListener('DOMContentLoaded', async () => {
     try {
@@ -94,18 +96,11 @@ function displayGroupList(grp) {
     // console.log(grp);
     parent.innerHTML = '';
     for (var i = 0; i < grp.length; i++) {
-        // console.log(grp[i].id);
         const li = document.createElement('li');
-        // li.setAttribute('group-id', grp[i].id);
         li.className = 'group-li'
         li.textContent = `${grp[i].name}`;
         const currentGroup = grp[i];
         li.onclick = function () {
-            // console.log(currentGroup.id);
-            // console.log(li.getAttribute('group-id'));
-            // setInterval(() => {
-
-            // }, 1000)
             fetchMsg(currentGroup.id, currentGroup.name)
             displayGroupDetails(currentGroup.id, currentGroup.name, currentGroup);
         }
@@ -125,22 +120,48 @@ async function displayGroupDetails(groupId, groupName, group) {
                 groupId: groupId
             }
         });
-
-        const users = usersInAGroup.data[0].users;
+        // console.log(usersInAGroup.data.users);
+        const users = usersInAGroup.data.users;
         // console.log(users);
         usersInfo.innerHTML = '';
         users.forEach(user => {
+            // console.log(user);
             const li = document.createElement('li');
-            li.className = 'group-li py-2';
+            li.className = 'group-lii py-2';
             li.textContent = user.name;
+            // console.log(user.member.admin);
+            const makeAdmin = document.createElement('button');
+            makeAdmin.className = 'btn btn-primary makeAdmin ';
+            makeAdmin.textContent = "Make Admin";
+            makeAdmin.addEventListener("click", () => makeAdmins(user.id, user.name, groupId));
+
+            const removeAdmin = document.createElement('button');
+            removeAdmin.className = 'btn btn-primary removeAdmin ';
+            removeAdmin.textContent = "Remove Admin";
+            removeAdmin.addEventListener("click", () => removeAdmins(user.id, user.name, groupId));
 
             const X = document.createElement('button');
-            X.className = 'btn btn-danger xtra-style removeUser';
+            X.className = 'btn btn-primary xtra-style removeUser';
             X.value = user.id;
             X.textContent = 'X';
-            X.addEventListener('click', () => removeUser(user.id, groupId));
+            X.addEventListener("click", () => removeUser(user.id, groupId));
+
             if (group.member.admin === true) {
-                li.appendChild(X);
+                if (user.member.admin == false) {
+                    li.appendChild(X);
+                    li.appendChild(makeAdmin);
+                } else if (user.member.owner === true && user.member.admin === true) {
+                    const span = document.createElement('span');
+                    span.className = 'adminText'
+                    span.textContent = 'Owner';
+                    li.appendChild(span);
+                } else {
+                    const span = document.createElement('span');
+                    span.className = 'adminText'
+                    span.textContent = 'Admin';
+                    li.appendChild(span);
+                    li.appendChild(removeAdmin);
+                }
             }
             usersInfo.appendChild(li);
         });
@@ -183,15 +204,64 @@ async function removeUser(userId, groupId) {
         const removeUser = await axios.post('http://localhost:4106/nexchat/group/remove-user', body);
         // console.log(removeUser);
         if (removeUser.status === 200) {
+
             removenotification.className = 'remove-notification';
             removenotification.textContent = 'User is removed.Go Back';
+            setTimeout(() => {
+                location.reload();
+            }, 2000);
         }
 
     } catch (er) {
+        console.log(er);
+    }
+}
+async function removeAdmins(userId, userName, groupId) {
+    try {
+        // console.log(userId, groupId);
+        // console.log('Hello This is remove user function');
 
+        const body = { userId, userName, groupId }
+
+        var removenotification = document.getElementById('remove-notification');
+
+
+        const removeAdmin = await axios.post('http://localhost:4106/nexchat/group/remove-admin', body);
+        // console.log(removeUser);
+        if (removeAdmin.status === 200) {
+
+            removenotification.className = 'remove-notification';
+            removenotification.textContent = 'User is removed.Go Back';
+            setTimeout(() => {
+                location.reload();
+            }, 2000);
+        }
+
+    } catch (er) {
+        console.log(er);
     }
 }
 
+// Make Admin
+async function makeAdmins(userId, userName, groupId) {
+    try {
+        console.log('hiii');
+        console.log(userId, userName, groupId);
+        const body = {
+            userId, userName, groupId
+        }
+        var removenotification = document.getElementById('remove-notification');
+
+        const makeAdmin = await axios.post('http://localhost:4106/nexchat/group/make-admin', body);
+        console.log(makeAdmin);
+        if (makeAdmin.status === 200) {
+            removenotification.className = 'remove-notification';
+            removenotification.textContent = 'User is Admin';
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
 // TOGGLING MODELS BODY OF A GROUP HEADER - MEMBER LIST <-----> INPUT LIST
 async function toggleAddUserSection() {
     try {
@@ -290,18 +360,12 @@ async function fetchMsg(grpId, groupName) {
     try {
 
         localStorage.setItem('groupId', grpId);
-
-        const headers = { 'authorization': localStorage.getItem('token') };
-        var msgBox = document.getElementById('msgBox');
-
         var grpname = document.getElementById('grp-name');
-
-
-
         grpname.textContent = groupName;
 
         const groupMessages = await axios.get('http://localhost:4106/nexchat/chats/get-group-msg', { params: { groupId: grpId } })
         // console.log(groupMessages);
+        // console.log(groupMessages.data.message[0].member.userId);
         showMsg(groupMessages)
 
 
@@ -331,23 +395,24 @@ function showMsg(messages) {
         var msgBox = document.getElementById('msg-Box');
 
         msgBox.innerHTML = ''
+        // console.log(messages.data[0].member.userId);
+        for (var i = 0; i < messages.data.length; i++) {
 
-        for (var i = 0; i < messages.data.message.length; i++) {
-
-            // console.log(messages.data.message[i].member.userId, 'all user id');
+            // console.log(messages.data[i]);
 
             var li = document.createElement('span');
-
+            // console.log(messages.data[i]);
             const userId = Number(localStorage.getItem('userId'));
-            // console.log(typeof (userId), 'testing logging user id');
+            if (messages.data[i].member === null) {
+                li.classList.add('msgs-div', 'text-start');
+                li.textContent = `Removed User : ${messages.data[i].chat}`;
 
-            if (userId === messages.data.message[i].member.userId) {
+            } else if (userId === messages.data[i].member.userId) {
                 li.classList.add('msgs-div', 'text-end');
-                li.textContent = `You : ${messages.data.message[i].chat}`;
-
+                li.textContent = `You : ${messages.data[i].chat}`;
             } else {
                 li.classList.add('msgs-div', 'text-start');
-                li.textContent = `${messages.data.message[i].chat}`;
+                li.textContent = `${messages.data[i].chat}`;
             }
 
             msgBox.appendChild(li);

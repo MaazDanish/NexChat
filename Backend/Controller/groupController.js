@@ -14,7 +14,7 @@ exports.createGroup = async (req, res, next) => {
 
         const group = await Group.create({ name: name });
 
-        const member = await Member.create({ userId: id, admin: true, groupId: group.id });
+        const member = await Member.create({ userId: id, admin: true, owner: true, groupId: group.id });
 
 
         for (const userId of users) {
@@ -75,22 +75,16 @@ exports.getAllGroupUsers = async (req, res, next) => {
     try {
         const groupId = req.query.groupId;
 
-        const group = await Group.findAll({
-            where: {
-                id: groupId
-            },
-            include: [
-                {
-                    model: User,
-                    attributes: ['name', 'id'],
-                    through: { attributes: [] }
-                }
-            ],
-            order: [['createdAt', 'ASC']]
+        const group = await Group.findOne({ where: { id: groupId } });
+        if (!group) throw new Error("No such group");
+
+        const users = await group.getUsers({
+            attributes: {
+                exclude: ['createdAt', 'updatedAt', 'password', 'phoneNumber', 'email']
+            }
         });
-
-
-        res.status(200).json(group);
+        console.log(users);
+        res.status(200).json({ users });
 
     } catch (err) {
         console.log(err);
@@ -134,12 +128,58 @@ exports.removeUser = async (req, res, next) => {
         if (member.dataValues.admin === true) {
             return res.status(408).json({ message: "Admin cannot remove themselves from the group" })
         }
-        await member.destroy();
+        const chats =
+            await member.destroy();
         res.status(200).send('Removed successfully');
         // console.log(member.dataValues.admin);
         // res.status(200).json({ success: true });
     } catch (err) {
         console.log(err);
+        res.status(500).json({ success: false, msg: 'Internal Server Error' });
+    }
+}
+
+exports.makeAdmin = async (req, res, next) => {
+    try {
+        const { userId, userName, groupId } = req.body;
+        console.log(userId, userName);
+
+        const group = await Group.findOne({ where: { id: groupId } });
+        if (!group) {
+            return res.status(409).json({ success: false, message: 'No group exist' })
+        }
+        const member = await Member.findOne({ where: { userId: userId, groupId: groupId } });
+        if (!member) {
+            return res.status(409).json({ success: false, message: 'No member exist ' })
+        }
+        await member.update({ admin: true });
+
+
+        res.status(200).json({ success: true });
+    } catch (Error) {
+        console.log(Error);
+        res.status(500).json({ success: false, msg: 'Internal Server Error' });
+    }
+}
+exports.removeAdmin = async (req, res, next) => {
+    try {
+        const { userId, userName, groupId } = req.body;
+        console.log(userId, userName);
+
+        const group = await Group.findOne({ where: { id: groupId } });
+        if (!group) {
+            return res.status(409).json({ success: false, message: 'No group exist' })
+        }
+        const member = await Member.findOne({ where: { userId: userId, groupId: groupId } });
+        if (!member) {
+            return res.status(409).json({ success: false, message: 'No member exist ' })
+        }
+        
+        await member.update({ admin: false });
+
+        res.status(200).json({ success: true });
+    } catch (Error) {
+        console.log(Error);
         res.status(500).json({ success: false, msg: 'Internal Server Error' });
     }
 }
