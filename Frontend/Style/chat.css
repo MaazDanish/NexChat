@@ -88,8 +88,8 @@ nav span {
 
 .msgs-div {
   display: block;
-  padding: 10px;
-  margin: 5px -10px;
+  padding: 0px 5px;
+  margin: 0px 0px;
   color: white;
   list-style-type: none;
   /* width: fit-content; */
@@ -179,7 +179,7 @@ h3 {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  right:80px;
+  right: 80px;
   border-radius: 50px;
 }
 
@@ -201,6 +201,25 @@ h3 {
   /* Align the delete button vertically at 50% of its parent's height */
   transform: translateY(-50%);
   /* Adjust the position of the delete button vertically to center it */
-  right:80px;
+  right: 80px;
   border-radius: 50px;
+}
+
+.msg-div {
+  /* margin-top: 5px; */
+  margin-bottom: 5px;
+  display: block;
+  width: fit-content;
+  /* background-color: red; */
+  padding:0px 5px  ;
+}
+
+.msg-div span {
+  color: white;
+  /* background-color: yellow ; */
+}
+.msg-div li {
+  /* color: white; */
+  margin: -8px;
+  /* background-color: green ; */
 }
