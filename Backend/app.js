@@ -13,6 +13,7 @@ const Group = require('./Models/Group');
 const Member = require('./Models/Member');
 const { socketToken } = require('./Middleware/authentication');
 const messageRoutes = require('./Routes/chatsRoutes');
+const cronJob = require('./Util/cronJob')
 
 const app = express();
 
