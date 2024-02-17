@@ -67,7 +67,7 @@ exports.getGroupChat = async (req, res, next) => {
                     }
                 ]
             });
-            
+
             //console.log('chats :>> ', chats);
             // return res.status(201).json({ success: true, data: ch
             // console.log(message.dataValues[i].memberId);
@@ -88,7 +88,7 @@ exports.getGroupChat = async (req, res, next) => {
 exports.getAllChats = async (req, res, next) => {
     try {
         const id = req.query.last;
-        console.log(id, 'coming frm fronte nd as a local storage id');
+        console.log(id, 'coming from front end as a local storage id');
 
         const chat = await Chat.findAll({
             where: {
@@ -104,6 +104,48 @@ exports.getAllChats = async (req, res, next) => {
         }
         // console.log(chat);
         res.status(200).json({ messages: chat, success: true });
+    } catch (err) {
+        res.status(500).json({ err: err, message: 'Internal server error while fething data from backend', success: false })
+        console.log(err);
+    }
+}
+exports.getGroupChatOne = async (req, res, next) => {
+    try {
+
+        const id = req.query.groupId;
+        const last = req.query.last;
+
+        const group = await Group.findByPk(id);
+        console.log(last,'teting last');
+        console.log(id, 'id is testing',last);
+        if (group) {
+            const message = await Chat.findAll({
+                where: {
+                    groupId: id,
+                    id: {
+                        [Sequelize.Op.gt]: last
+                    }
+                },
+                include: [
+                    {
+                        model: Member,
+                        attributes: ['userId']
+
+                    }
+                ]
+            });
+
+            //console.log('chats :>> ', chats);
+            // return res.status(201).json({ success: true, data: ch
+            // console.log(message.dataValues[i].memberId);
+            // console.log(message);
+            return res.status(200).json(message);
+
+        } else {
+
+            return res.status(409).json({ msg: "There is no group exist ", success: false });
+        }
+
     } catch (err) {
         res.status(500).json({ err: err, message: 'Internal server error while fething data from backend', success: false })
         console.log(err);

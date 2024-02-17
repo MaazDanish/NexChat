@@ -360,6 +360,9 @@ async function fetchMsg(grpId, groupName) {
     try {
 
         localStorage.setItem('groupId', grpId);
+        // var messages = JSON.parse(localStorage.getItem('messages'));
+        // console.log(messages);
+
         var grpname = document.getElementById('grp-name');
         grpname.textContent = groupName;
 
@@ -369,26 +372,39 @@ async function fetchMsg(grpId, groupName) {
             }
         });
 
-        // console.log(usersInAGroup.data.users);
-
         const groupMessages = await axios.get('http://localhost:4106/nexchat/chats/get-group-msg', { params: { groupId: grpId } })
-        // console.log(groupMessages);
-        // console.log(groupMessages.data.message[0].member.userId);
+        console.log(groupMessages);
         showMsg(groupMessages, usersInAGroup.data.users)
 
 
-        // if (messages) {
+        // if (!messages) {
         //     const last = 0;
         //     // console.log(last);
-        //     const chat = await axios.get(`http://localhost:4106/nexchat/chats/get-all-msg?last=${last}`);
-        //     const msg = localStorage.setItem('msg', JSON.stringify(chat.data.messages));
-        //     showMsg(messages);
+        //     const chat = await axios.get(`http://localhost:4106/nexchat/chats/get-group-msg`, {
+        //         params: {
+        //             groupId: grpId,
+        //             last: last
+        //         }
+        //     });
+        //     // console.log(chat.data);
+        //     const msg = localStorage.setItem('messages', JSON.stringify(chat.data));
+        //     showMsg(messages, usersInAGroup.data.users)
+        //     // showMsg(messages);
 
         // } else {
         //     last = messages[messages.length - 1].id;
-        //     const chat = await axios.get(`http://localhost:4106/nexchat/chats/get-all-msg?last=${last}`);
-        //     const msg = localStorage.setItem('msg', JSON.stringify(chat.data.messages));
-        //     showMsg(messages);
+        //     // console.log(messages.length);
+        //     console.log(last);
+        //     const chat = await axios.get(`http://localhost:4106/nexchat/chats/get-group-msg`, {
+        //         params: {
+        //             groupId: grpId,
+        //             last: last
+        //         }
+        //     });
+        //     console.log(chat);
+        //     const msg = localStorage.setItem('messages', JSON.stringify(chat.data));
+        //     showMsg(messages, usersInAGroup.data.users)
+        //     // showMsg(messages);
         // }
     } catch (err) {
         console.log(err);
@@ -400,15 +416,16 @@ async function fetchMsg(grpId, groupName) {
 // DISPLAY THE MESSAGES TO THE SCREEN
 function showMsg(messages, users) {
     try {
+        // console.log(messages);
         var msgBox = document.getElementById('msg-Box');
-        console.log(users);
+        // console.log(users);
         msgBox.innerHTML = ''
 
         // console.log(messages.data[0].member.userId);
 
         for (var i = 0; i < messages.data.length; i++) {
 
-            // console.log(messages.data[i]);
+            // console.log(messages[i]);
 
             var li = document.createElement('span');
             // console.log(messages.data[i]);

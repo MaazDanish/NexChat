@@ -11,11 +11,18 @@ const User = require('./Models/userModel');
 const Chat = require('./Models/chatModel');
 const Group = require('./Models/Group');
 const Member = require('./Models/Member');
+const { socketToken } = require('./Middleware/authentication');
+const messageRoutes = require('./Routes/chatsRoutes');
 
 const app = express();
 
+const httpServer = require('http').createServer(app);
+const io = require('socket.io')(httpServer, {
+    cors: ["http://127.0.0.1:5500"]
+});
+
 app.use(cors({
-    origin: "http://127.0.0.1:5501",
+    origin: "http://127.0.0.1:5500",
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true
 }));
@@ -39,8 +46,17 @@ Chat.belongsTo(Member);
 
 
 
-sequelize.sync().then(res => {
-    app.listen(process.env.PORT_NUMBER);
+sequelize.sync().then(() => {
+    const connection = (socket) => {
+        socket.use(async (packet, next) => {
+            await socketToken(socket, next);
+        })
+        console.log(socket.id);
+        messageRoutes(io, socket);
+    }
+    // app.listen();
+    io.on('connection', connection);
+    httpServer.listen(process.env.PORT_NUMBER)
     console.log(`Server is running on port ${process.env.PORT_NUMBER}`);
 }).catch(err => {
     console.log('Server is not running due to internal problem');
