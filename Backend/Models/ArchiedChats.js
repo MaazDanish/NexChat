@@ -24,7 +24,6 @@ const Archived = sequelize.define('archived', {
     },
     memberId: {
         type: Sequelize.INTEGER,
-        allowNull: false
     }
 })
 

@@ -6,11 +6,13 @@ const sequelize = require('./Util/database');
 const userRoutes = require('./Routes/userRoutes');
 const chatRoutes = require('./Routes/chatRoutes');
 const groupRoutes = require('./Routes/groupRoutes');
+const resetPasswordRoutes = require('./Routes/forgotpasswordRoute');
 
 const User = require('./Models/userModel');
 const Chat = require('./Models/chatModel');
 const Group = require('./Models/Group');
 const Member = require('./Models/Member');
+const ForGotPassWord = require('./Models/forgotPassword');
 const { socketToken } = require('./Middleware/authentication');
 const messageRoutes = require('./Routes/chatsRoutes');
 const cronJob = require('./Util/cronJob')
@@ -32,12 +34,16 @@ app.use(express.json());
 app.use('/nexchat/user', userRoutes);
 app.use('/nexchat/chats', chatRoutes);
 app.use('/nexchat/group', groupRoutes);
+app.use('/nexchat/password', resetPasswordRoutes);
 
 // User.hasMany(Chat);
 // Chat.belongsTo(User);
 
 User.belongsToMany(Group, { through: Member });
 Group.belongsToMany(User, { through: Member });
+
+User.hasMany(ForGotPassWord);
+ForGotPassWord.belongsTo(User);
 
 Group.hasMany(Chat);
 Chat.belongsTo(Group);

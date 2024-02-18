@@ -6,7 +6,7 @@ const Chat = require('../Models/chatModel');
 
 const cronJob = CronJob.from({
     cronTime: '0 0 * * *',
-    // cronTime: '*/1 * * * * ',
+    // cronTime: '*/1 * * * * *',
     onTick: async function () {
         const archivedchats = await Chat.findAll({
             where: {
