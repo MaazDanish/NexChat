@@ -53,7 +53,7 @@ exports.getGroupChat = async (req, res, next) => {
 
         const group = await Group.findByPk(id);
 
-        console.log(id, 'id is testing');
+        // console.log(id, 'id is testing');
         if (group) {
             const message = await Chat.findAll({
                 where: {
@@ -116,8 +116,8 @@ exports.getGroupChatOne = async (req, res, next) => {
         const last = req.query.last;
 
         const group = await Group.findByPk(id);
-        console.log(last,'teting last');
-        console.log(id, 'id is testing',last);
+        // console.log(last,'teting last');
+        // console.log(id, 'id is testing',last);
         if (group) {
             const message = await Chat.findAll({
                 where: {

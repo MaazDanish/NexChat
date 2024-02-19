@@ -1,5 +1,11 @@
 
+import { io } from "https://cdn.socket.io/4.7.2/socket.io.esm.min.js";
 
+const socket = io('http://localhost:4106', {
+    auth: {
+        token: localStorage.getItem('token')
+    }
+})
 // DOM CONTENT LOADED
 window.addEventListener('DOMContentLoaded', async () => {
     try {
@@ -348,8 +354,12 @@ sendChat.addEventListener('click', async () => {
             chat: chat.value,
             groupId: groupId
         };
-        let response = await axios.post('http://localhost:4106/nexchat/chats/send-group-msg', chats, { headers });
-        chat.value = '';
+        socket.emit('message:send-message', chats, () => {
+            console.log(chats);
+            chat.value = '';
+            scrollToBottom();
+        })
+        // let response = await axios.post('http://localhost:4106/nexchat/chats/send-group-msg', chats, { headers });
     } catch (err) {
         console.log(err);
     }
@@ -365,47 +375,21 @@ async function fetchMsg(grpId, groupName) {
 
         var grpname = document.getElementById('grp-name');
         grpname.textContent = groupName;
-
+        const groupId = grpId;
         const usersInAGroup = await axios.get('http://localhost:4106/nexchat/group/get-all-group-users', {
             params: {
-                groupId: grpId
+                groupId: groupId
             }
         });
 
+        socket.emit('join-room', groupId, (groupMessages, id, groupUser) => {
+            console.log(groupMessages, id, groupUser);
+        })
+
         const groupMessages = await axios.get('http://localhost:4106/nexchat/chats/get-group-msg', { params: { groupId: grpId } })
-        console.log(groupMessages);
+
+        // console.log(groupMessages);
         showMsg(groupMessages, usersInAGroup.data.users)
-
-
-        // if (!messages) {
-        //     const last = 0;
-        //     // console.log(last);
-        //     const chat = await axios.get(`http://localhost:4106/nexchat/chats/get-group-msg`, {
-        //         params: {
-        //             groupId: grpId,
-        //             last: last
-        //         }
-        //     });
-        //     // console.log(chat.data);
-        //     const msg = localStorage.setItem('messages', JSON.stringify(chat.data));
-        //     showMsg(messages, usersInAGroup.data.users)
-        //     // showMsg(messages);
-
-        // } else {
-        //     last = messages[messages.length - 1].id;
-        //     // console.log(messages.length);
-        //     console.log(last);
-        //     const chat = await axios.get(`http://localhost:4106/nexchat/chats/get-group-msg`, {
-        //         params: {
-        //             groupId: grpId,
-        //             last: last
-        //         }
-        //     });
-        //     console.log(chat);
-        //     const msg = localStorage.setItem('messages', JSON.stringify(chat.data));
-        //     showMsg(messages, usersInAGroup.data.users)
-        //     // showMsg(messages);
-        // }
     } catch (err) {
         console.log(err);
     }
@@ -439,7 +423,7 @@ function showMsg(messages, users) {
                 li.textContent = `You : ${messages.data[i].chat}`;
             } else {
                 const u = users.find(user => user.id === messages.data[i].member.userId)
-                console.log(u.name);
+                // console.log(u.name);
                 li.classList.add('msgs-div', 'text-start');
                 li.textContent = `${u.name} : ${messages.data[i].chat}`;
 
