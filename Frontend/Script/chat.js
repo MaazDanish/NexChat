@@ -376,20 +376,23 @@ async function fetchMsg(grpId, groupName) {
         var grpname = document.getElementById('grp-name');
         grpname.textContent = groupName;
         const groupId = grpId;
-        const usersInAGroup = await axios.get('http://localhost:4106/nexchat/group/get-all-group-users', {
-            params: {
-                groupId: groupId
-            }
-        });
+        // const usersInAGroup = await axios.get('http://localhost:4106/nexchat/group/get-all-group-users', {
+        //     params: {
+        //         groupId: groupId
+        //     }
+        // });
 
         socket.emit('join-room', groupId, (groupMessages, id, groupUser) => {
-            console.log(groupMessages, id, groupUser);
+            // console.log('hiiiiii');
+            // console.log(groupMessages, id, groupUser);
+            // showMsg(groupMessages, usersInAGroup.data.users)
+            showMsg(groupMessages, groupUser, id)
+            scrollToBottom();
         })
 
-        const groupMessages = await axios.get('http://localhost:4106/nexchat/chats/get-group-msg', { params: { groupId: grpId } })
+        // const groupMessages = await axios.get('http://localhost:4106/nexchat/chats/get-group-msg', { params: { groupId: grpId } })
 
         // console.log(groupMessages);
-        showMsg(groupMessages, usersInAGroup.data.users)
     } catch (err) {
         console.log(err);
     }
@@ -398,34 +401,38 @@ async function fetchMsg(grpId, groupName) {
 
 
 // DISPLAY THE MESSAGES TO THE SCREEN
-function showMsg(messages, users) {
+function showMsg(messages, users, id) {
     try {
         // console.log(messages);
         var msgBox = document.getElementById('msg-Box');
         // console.log(users);
         msgBox.innerHTML = ''
-
+        // console.log(messages);
+        // console.log(users);
         // console.log(messages.data[0].member.userId);
 
-        for (var i = 0; i < messages.data.length; i++) {
+        for (var i = 0; i < messages.length; i++) {
 
             // console.log(messages[i]);
 
             var li = document.createElement('span');
             // console.log(messages.data[i]);
             const userId = Number(localStorage.getItem('userId'));
-            if (messages.data[i].member === null) {
+            if (messages[i].memberId === null) {
+                console.log('hi');
                 li.classList.add('msgs-div', 'text-start');
-                li.textContent = `Removed User : ${messages.data[i].chat}`;
+                li.textContent = `Removed User : ${messages[i].chat}`;
 
-            } else if (userId === messages.data[i].member.userId) {
+            } else if (id === messages[i].memberId) {
+                console.log('hi2');
                 li.classList.add('msgs-div', 'text-end');
-                li.textContent = `You : ${messages.data[i].chat}`;
+                li.textContent = `You : ${messages[i].chat}`;
             } else {
-                const u = users.find(user => user.id === messages.data[i].member.userId)
+                console.log('hi3');
+                const u = users.find(user => user.member.id === messages[i].memberId)
                 // console.log(u.name);
                 li.classList.add('msgs-div', 'text-start');
-                li.textContent = `${u.name} : ${messages.data[i].chat}`;
+                li.textContent = `${u.name} : ${messages[i].chat}`;
 
             }
 
