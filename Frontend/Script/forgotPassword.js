@@ -19,7 +19,6 @@ async function resetPasswordwithEmail(event) {
         const response = await axios.post(`http://localhost:4106/nexchat/password/send-otp-via-email/${email}`)
         console.log(response);
         if (response.status === 200) {
-            alert('An OTP is send to your email address!');
             firstform.style.display = 'none'
         }
     } catch (err) {
@@ -37,7 +36,6 @@ async function verifyOTP(event) {
         console.log(otp);
         const response = await axios.post(`http://localhost:4106/nexchat/password/verify-otp-via-email/${otp}`)
         if (response.status === 200) {
-            alert('OTp is macthed')
             secondform.style.display = 'none'
             hiddenotp.value = otp;
         }
@@ -94,23 +92,6 @@ async function updatePassword(event) {
     }
 }
 
-
-async function resetPasswordwithNumber(event) {
-    try {
-        event.preventDefault();
-        const body = {
-            phoneNumber: event.target.phoneNumber.value
-        }
-
-        // const response = await axios.post('')
-        console.log(body);
-    } catch (err) {
-        console.log(err);
-    }
-
-}
-
-
 // testing email
 function isValidPassword(password, confirmPassword) {
     if (password !== confirmPassword) {
@@ -136,9 +117,4 @@ function isValidPassword(password, confirmPassword) {
 
     // if all condition are true then 
     return true;
-}
-function expireMsg(msg) {
-    setTimeout(() => {
-        msg.textContent = '';
-    }, 3000)
 }
