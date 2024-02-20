@@ -22,6 +22,7 @@ async function SignUp(event) {
         password: event.target.password.value,
         confirmPassword: event.target.confirmPassword.value
     }
+
     try {
         var msg = document.getElementById('signupmsg');
         if (isValidPassword(event.target.password.value, event.target.confirmPassword.value)) {
@@ -34,19 +35,16 @@ async function SignUp(event) {
             clearField(event);
         } else {
             if (event.target.password.value.length < 6) {
-                // console.log('Password must be more than 6 letter');
                 msg.classList.add('msg');
                 msg.textContent = 'Error - Password must be more than 6 letter';
                 expires(msg);
 
             } else if (event.target.password.value !== event.target.confirmPassword.value) {
-                // console.log('password does not match');
                 msg.classList.add('msg');
                 msg.textContent = "Error - password doesn't match";
                 expires(msg);
 
             } else {
-                // console.log('Password should contain at least one small letter one capital letter and one numeric number');
                 msg.classList.add('msg');
                 msg.textContent = 'Error - Password must contain atleast one small letter, one capital letter and one numeric number'
                 expires(msg);
@@ -118,7 +116,6 @@ async function SignIn(event) {
         const user = await axios.post('http://localhost:4106/nexchat/user/sign-in', signin);
         // console.log(user.data.token);
         if (user.status === 200) {
-            console.log(user.data.token);
             localStorage.setItem("token", user.data.token);
             window.location.href = './messages.html';
         }

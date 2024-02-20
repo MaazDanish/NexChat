@@ -28,8 +28,6 @@ nav span {
 .grp-list {
   overflow-y: auto;
   border-radius: 50px;
-  /* background-color: red;
-   */
 }
 
 /* Children of UL - LI */
@@ -92,10 +90,6 @@ nav span {
   margin: 0px 0px;
   color: white;
   list-style-type: none;
-  /* width: fit-content; */
-  /* background-color: rgb(74, 74, 74); */
-  /* border-radius: 25px; */
-  /* border: 1px solid red; */
 }
 
 .headerofnav {
@@ -154,13 +148,9 @@ h3 {
 
 /*  */
 .xtra-style {
-  /* position: absolute; */
   position: absolute;
-  /* Position the delete button absolutely within its parent list item */
   top: 50%;
-  /* Align the delete button vertically at 50% of its parent's height */
   transform: translateY(-50%);
-  /* Adjust the position of the delete button vertically to center it */
   right: 20px;
   border-radius: 50px;
 }
@@ -185,41 +175,30 @@ h3 {
 
 .adminText {
   position: absolute;
-  /* Position the delete button absolutely within its parent list item */
   top: 50%;
-  /* Align the delete button vertically at 50% of its parent's height */
   transform: translateY(-50%);
-  /* Adjust the position of the delete button vertically to center it */
   right: 15px;
   border-radius: 50px;
 }
 
 .removeAdmin {
   position: absolute;
-  /* Position the delete button absolutely within its parent list item */
   top: 50%;
-  /* Align the delete button vertically at 50% of its parent's height */
   transform: translateY(-50%);
-  /* Adjust the position of the delete button vertically to center it */
   right: 80px;
   border-radius: 50px;
 }
 
 .msg-div {
-  /* margin-top: 5px; */
   margin-bottom: 5px;
   display: block;
   width: fit-content;
-  /* background-color: red; */
   padding:0px 5px  ;
 }
 
 .msg-div span {
   color: white;
-  /* background-color: yellow ; */
 }
 .msg-div li {
-  /* color: white; */
   margin: -8px;
-  /* background-color: green ; */
 }

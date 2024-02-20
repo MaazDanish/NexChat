@@ -48,10 +48,7 @@ async function updatePassword(event) {
     try {
 
         event.preventDefault();
-        console.log('Password');
         const msg = document.getElementById('msg');
-        // console.log(document.getElementById('hidden-otp').value);
-
 
         var otp = document.getElementById('hidden-otp').value;
         const password = event.target.password.value;
@@ -71,17 +68,14 @@ async function updatePassword(event) {
 
         } else {
             if (event.target.password.value.length < 6) {
-                // console.log('Password must be more than 6 letter');
                 msg.textContent = 'Error - Password must be more than 6 letter';
                 expires(msg);
 
             } else if (event.target.password.value !== event.target.confirmPassword.value) {
-                // console.log('password does not match');
                 msg.textContent = "Error - password doesn't match";
                 expires(msg);
 
             } else {
-                // console.log('Password should contain at least one small letter one capital letter and one numeric number');
                 msg.textContent = 'Error - Password must contain atleast one small letter, one capital letter and one numeric number'
                 expires(msg);
 

@@ -3,7 +3,6 @@ const express = require('express');
 const routes = express.Router();
 const UserController = require('../controllers/user');
 const { authenticateToken } = require('../middlewares/authentication');
-// const authenticateToken = require('../Middleware/authentication');
 
 routes.post('/sign-up', UserController.SignUpUser);
 routes.post('/sign-in', UserController.SignIn);

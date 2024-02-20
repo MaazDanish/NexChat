@@ -6,27 +6,27 @@ module.exports = (io, socket) => {
         const groupId = data.groupId;
         const message = data.message;
         const group = await Group.findByPk(groupId)
-        // console.log(group);
-        console.log(socket.user, 'socketid');
         const user = await group.getUsers({ where: { id: socket.user.id } })
-        console.log(user, 'user');
+
         const member = user[0].member
-        console.log(member, 'member');
-        const result = await member.createMessage({
+
+        await member.createMessage({
             messages: message, groupId
         })
+
         socket.to(data.groupId).emit('message:recieve-message', data.message, socket.user.name)
-
         cb()
-    }
-    socket.on('join-room', async (groupId, cb) => {
-        const group = await Group.findByPk(groupId);
+    };
 
+    socket.on('join-room', async (groupId, cb) => {
+
+        const group = await Group.findByPk(groupId);
         const user = await group.getUsers({
             where: {
                 id: socket.user.id
             }
         })
+
         const member = user[0].member;
 
         const messages = await group.getMessages();
@@ -38,7 +38,9 @@ module.exports = (io, socket) => {
 
         await cb(messages, member.id, users)
     })
+
     socket.on('message:send-message', addMessage);
+    
     socket.on('file:send-file-data', (data, groupId) => {
         socket.to(groupId).emit('file:recieve-file', data, socket.user.name)
     })

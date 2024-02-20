@@ -41,15 +41,12 @@ exports.SignIn = async (req, res, next) => {
         const matchingPassword = await bcrypt.compare(password, user.password);
 
         if (matchingPassword) {
-            // console.log(user.id, 'user id');
             const payload = {
                 userId: user.id
             }
 
             let token = jwt.sign(payload, process.env.SECRET_KEY);
-            // console.log(token, 'token');
-            // console.log(token);
-
+        
             return res.status(200).json({ success: true, message: 'User login Successfull', token: token })
         } else {
             return res.status(401).json({ success: false, message: 'One or More field is Incorrect' })
@@ -66,8 +63,6 @@ exports.SignIn = async (req, res, next) => {
 exports.getUserInformation = async (req, res, next) => {
     try {
         const userId = req.decoded_UserId.userId;
-        // console.log(userId);
-
         const user = await User.findOne({
             where: {
                 id: userId
@@ -109,14 +104,12 @@ exports.getAllUsers = async (req, res, next) => {
 // getting users for adding in agroup where memvbers already added.so here we will filter those mebers
 exports.getMoreUsers = async (req, res, next) => {
     try {
-        // console.log('hiiiiiiiiiiiiiiiii');
+    
         const groupId = req.params.groupId;
-        // console.log(groupId);
-        // const user = req.decoded_UserId.userId;
+     
         const group = await Group.findOne({ where: { id: groupId } })
         const users = await group.getUsers();
         const userId = users.map(user => user.id);
-        // console.log(userId);
 
         const allUser = await User.findAll({
             where: {
@@ -128,7 +121,7 @@ exports.getMoreUsers = async (req, res, next) => {
                 exclude: ['createdAt', 'updatedAt', 'password', 'phoneNumber', 'email']
             }
         })
-        // console.log(allUser);
+      
         res.status(200).json(allUser);
     } catch (err) {
         console.log(err);

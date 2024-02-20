@@ -9,23 +9,18 @@ const socket = io('http://localhost:4106', {
 // DOM CONTENT LOADED
 window.addEventListener('DOMContentLoaded', async () => {
     try {
-        // console.log('hiiiii');
+
         const headers = { 'authorization': localStorage.getItem('token') };
-        // console.log(headers.authorization);
+
         const user = await axios.get('http://localhost:4106/nexchat/user/get-user-info', { headers });
-        // console.log(user);
         displayUserInformation(user.data)
-        // fetchMsg();
 
         const grp = await axios.get('http://localhost:4106/nexchat/group/get-groups', { headers });
         displayGroupList(grp.data);
-        // console.log(grp.data);
 
         const users = await axios.get('http://localhost:4106/nexchat/user/get-all-user', { headers });
-
-        // console.log(users.data.users);
         saveUserForaddingInGroup(users.data);
-        // toggleAddUserSection(users.data);
+
     } catch (err) {
         console.log(err);
     }
@@ -45,20 +40,18 @@ function displayUserInformation(user) {
 function saveUserForaddingInGroup(user) {
     var selectUser = document.getElementById('selectUser');
 
-    // console.log(user.users);
     for (var i = 0; i < user.users.length; i++) {
-        // console.log(user.users[i].name, user.users[i].id);
         var option = document.createElement('option');
         option.value = user.users[i].id;
         option.text = user.users[i].name;
         selectUser.appendChild(option);
     }
-    // toggleAddUserSection(user);
 }
 
 // CREATING GROUP
 var createGroup = document.getElementById('createGroup');
 createGroup.addEventListener('click', createGroups);
+
 async function createGroups() {
     try {
 
@@ -69,8 +62,6 @@ async function createGroups() {
 
         var selectUser = document.getElementById('selectUser');
         const selectedUsers = Array.from(selectUser.selectedOptions).map(option => option.value);
-        console.log(selectedUsers);
-
 
         var groupName = document.getElementById('groupName').value;
         const grpBody = {
@@ -88,7 +79,9 @@ async function createGroups() {
             if (grp.status === 200) {
                 notification.className = 'notification-style';
                 notification.textContent = `${grp.data.name} is created successfully.`;
-                // displayGroupList(grp.data);
+                setTimeout(() => {
+                    location.reload();
+                }, 1000)
             }
 
             document.getElementById('groupName').value = '';
@@ -101,8 +94,9 @@ async function createGroups() {
 // DISPLAYTING GROUP LIST 
 function displayGroupList(grp) {
     const parent = document.getElementById('groupList');
-    // console.log(grp);
+
     parent.innerHTML = '';
+
     for (var i = 0; i < grp.length; i++) {
         const li = document.createElement('li');
         li.className = 'group-li'
@@ -110,7 +104,6 @@ function displayGroupList(grp) {
         const currentGroup = grp[i];
         li.onclick = function () {
             fetchMsg(currentGroup.id, currentGroup.name)
-            console.log(currentGroup);
             displayGroupDetails(currentGroup.id, currentGroup.name, currentGroup);
         }
         parent.appendChild(li);
@@ -129,16 +122,15 @@ async function displayGroupDetails(groupId, groupName, group) {
                 groupId: groupId
             }
         });
-        // console.log(usersInAGroup.data.users);
+
         const users = usersInAGroup.data.users;
-        // console.log(users);
+
         usersInfo.innerHTML = '';
+
         users.forEach(user => {
-            // console.log(user);
             const li = document.createElement('li');
             li.className = 'group-lii py-2';
             li.textContent = user.name;
-            // console.log(user.member.admin);
             const makeAdmin = document.createElement('button');
             makeAdmin.className = 'btn btn-light makeAdmin ';
             makeAdmin.textContent = "Make Admin";
@@ -174,18 +166,15 @@ async function displayGroupDetails(groupId, groupName, group) {
             }
             usersInfo.appendChild(li);
         });
-        // console.log(usersInAGroup.data[0]);
-        // console.log(groupName);
+
         groupDetailsModalLabel.textContent = groupName;
 
 
-        // console.log(group.member.admin);
+
         if (group.member.admin !== true) {
             document.getElementById("addButton+").style.display = "none";
         } else {
             document.getElementById("addButton+").style.display = "block";
-            // document.getElementsByClassName('removeUser').style.display = 'block';
-
         }
 
 
@@ -199,8 +188,6 @@ async function displayGroupDetails(groupId, groupName, group) {
 // REMOVING USER BY ADMIN IN AGROUP
 async function removeUser(userId, groupId) {
     try {
-        // console.log(userId, groupId);
-        // console.log('Hello This is remove user function');
 
         const body = {
             userId: userId,
@@ -211,14 +198,12 @@ async function removeUser(userId, groupId) {
 
 
         const removeUser = await axios.post('http://localhost:4106/nexchat/group/remove-user', body);
-        // console.log(removeUser);
         if (removeUser.status === 200) {
-
             removenotification.className = 'remove-notification';
             removenotification.textContent = 'User is removed.Go Back';
             setTimeout(() => {
                 location.reload();
-            }, 2000);
+            }, 1000);
         }
 
     } catch (er) {
@@ -227,23 +212,17 @@ async function removeUser(userId, groupId) {
 }
 async function removeAdmins(userId, userName, groupId) {
     try {
-        // console.log(userId, groupId);
-        // console.log('Hello This is remove user function');
-
         const body = { userId, userName, groupId }
 
         var removenotification = document.getElementById('remove-notification');
 
-
         const removeAdmin = await axios.post('http://localhost:4106/nexchat/group/remove-admin', body);
-        // console.log(removeUser);
         if (removeAdmin.status === 200) {
-
             removenotification.className = 'remove-notification';
             removenotification.textContent = 'User is removed.Go Back';
             setTimeout(() => {
                 location.reload();
-            }, 2000);
+            }, 1000);
         }
 
     } catch (er) {
@@ -254,8 +233,6 @@ async function removeAdmins(userId, userName, groupId) {
 // Make Admin
 async function makeAdmins(userId, userName, groupId) {
     try {
-        console.log('hiii');
-        console.log(userId, userName, groupId);
         const body = {
             userId, userName, groupId
         }
@@ -266,12 +243,17 @@ async function makeAdmins(userId, userName, groupId) {
         if (makeAdmin.status === 200) {
             removenotification.className = 'remove-notification';
             removenotification.textContent = 'User is Admin';
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
         }
     } catch (error) {
         console.log(error);
     }
 }
 // TOGGLING MODELS BODY OF A GROUP HEADER - MEMBER LIST <-----> INPUT LIST
+var addButton = document.getElementById('addButton+');
+addButton.addEventListener('click', toggleAddUserSection);
 async function toggleAddUserSection() {
     try {
         const addUserSection = document.getElementById('addUserSection');
@@ -289,10 +271,11 @@ async function toggleAddUserSection() {
             addButton.textContent = '<--';
 
         }
+
         selectAllUser.innerHTML = '';
+
         const allUser = await axios.get(`http://localhost:4106/nexchat/user/get-more-users/${groupId}`);
         for (var i = 0; i < allUser.data.length; i++) {
-            // console.log(allUser.data[i]);
             var option = document.createElement('option');
             option.value = allUser.data[i].id;
             option.text = allUser.data[i].name;
@@ -303,12 +286,12 @@ async function toggleAddUserSection() {
     } catch (err) {
         console.log(err);
     }
-
-    // console.log(users);
 }
 
 // ADDING MORE USER BY ADMIN
-async function addMoreUser(event) {
+var addmoreuser = document.getElementById('addmoreusers');
+addmoreuser.addEventListener('click', addMoreUsers);
+async function addMoreUsers(event) {
     try {
 
         event.preventDefault();
@@ -317,8 +300,8 @@ async function addMoreUser(event) {
         const selectAllUser = document.getElementById('selectAllUser');
 
         const groupId = localStorage.getItem('groupId');
+
         const selectedUsers = Array.from(selectAllUser.selectedOptions).map(option => option.value);
-        // console.log(selectedUsers);
 
         const body = {
             groupId: groupId,
@@ -327,12 +310,13 @@ async function addMoreUser(event) {
 
 
         const users = await axios.post(`http://localhost:4106/nexchat/group/add-more-user`, body);
-        // console.log(users.status);
         if (users.status === 200) {
             notification.className = 'notification-style';
             notification.textContent = `User is Added Succesfullly.Go back`;
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
         }
-        // console.log(users);
     } catch (err) {
         console.log(err);
     }
@@ -362,7 +346,6 @@ sendChat.addEventListener('click', async () => {
             message.value = '';
             scrollToBottom();
         })
-        // let response = await axios.post('http://localhost:4106/nexchat/chats/send-group-msg', chats, { headers });
     } catch (err) {
         console.log(err);
     }
@@ -373,30 +356,18 @@ async function fetchMsg(grpId, groupName) {
     try {
 
         localStorage.setItem('groupId', grpId);
-        // var messages = JSON.parse(localStorage.getItem('messages'));
-        // console.log(messages);
 
         var grpname = document.getElementById('grp-name');
         grpname.textContent = groupName;
         const groupId = grpId;
-        // const usersInAGroup = await axios.get('http://localhost:4106/nexchat/group/get-all-group-users', {
-        //     params: {
-        //         groupId: groupId
-        //     }
-        // });
 
         // Implement socket logic here
         socket.emit('join-room', groupId, (groupMessages, id, groupUser) => {
-            // console.log('hiiiiii');
             console.log(groupMessages, id, groupUser);
             showMsg(groupMessages, groupUser, id)
             scrollToBottom();
         })
 
-
-        // const groupMessages = await axios.get('http://localhost:4106/nexchat/chats/get-group-msg', { params: { groupId: grpId } })
-        // showMsg(groupMessages, usersInAGroup.data.users)
-        // console.log(groupMessages);
     } catch (err) {
         console.log(err);
     }
@@ -407,21 +378,11 @@ async function fetchMsg(grpId, groupName) {
 // DISPLAY THE MESSAGES TO THE SCREEN
 function showMsg(messages, users, id) {
     try {
-        // console.log(messages);
         var msgBox = document.getElementById('msg-Box');
-        // console.log(users);
         msgBox.innerHTML = ''
-        // console.log(messages);
-        // console.log(users);
-        // console.log(messages.data[0].member.userId);
 
         for (var i = 0; i < messages.length; i++) {
-
-            // console.log(messages[i]);
-
             var li = document.createElement('span');
-            // console.log(messages.data[i]);
-            const userId = Number(localStorage.getItem('userId'));
             if (messages[i].memberId === null) {
                 console.log('hi');
                 li.classList.add('msgs-div', 'text-start');
@@ -434,7 +395,6 @@ function showMsg(messages, users, id) {
             } else {
                 console.log('hi3');
                 const u = users.find(user => user.member.id === messages[i].memberId)
-                // console.log(u.name);
                 li.classList.add('msgs-div', 'text-start');
                 li.textContent = `${u.name} : ${messages[i].messages}`;
 
@@ -456,7 +416,6 @@ logout.addEventListener('click', () => {
     console.log('loggging out');
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
-    // localStorage.removeItem('users');
     localStorage.removeItem('groupId');
     window.location.href = './home.html';
 })

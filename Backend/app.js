@@ -4,7 +4,6 @@ require('dotenv').config();
 
 const sequelize = require('./utils/database');
 const user = require('./routes/user');
-const message = require('./routes/message');
 const group = require('./routes/group');
 const forgotPassword = require('./routes/forgotpassword');
 const messages = require('./routes/socket_Io')
@@ -32,12 +31,9 @@ app.use(cors({
 app.use(express.json());
 
 app.use('/nexchat/user', user);
-// app.use('/nexchat/chats', message);
 app.use('/nexchat/group', group);
 app.use('/nexchat/password', forgotPassword);
 
-// User.hasMany(Chat);
-// Chat.belongsTo(User);
 
 User.belongsToMany(Group, { through: Member });
 Group.belongsToMany(User, { through: Member });
@@ -61,7 +57,7 @@ sequelize.sync().then(() => {
         console.log(socket.id);
         messages(io, socket);
     }
-    // app.listen();
+    
     io.on('connection', connection);
     httpServer.listen(process.env.PORT_NUMBER)
     console.log(`Server is running on port ${process.env.PORT_NUMBER}`);

@@ -6,15 +6,13 @@ const { UUIDV4 } = require('sequelize');
 
 exports.createGroup = async (req, res, next) => {
     try {
-        const name = req.body.name;
-        const users = req.body.users;
+        const { name, users } = req.body;
 
         const id = req.decoded_UserId.userId;
 
         const group = await Group.create({ name: name });
 
-        const member = await Member.create({ userId: id, admin: true, owner: true, groupId: group.id });
-
+        await Member.create({ userId: id, admin: true, owner: true, groupId: group.id });
 
         for (const userId of users) {
             await Member.create({ userId: userId, groupId: group.id })
@@ -82,7 +80,6 @@ exports.getAllGroupUsers = async (req, res, next) => {
                 exclude: ['createdAt', 'updatedAt', 'password', 'phoneNumber', 'email']
             }
         });
-        // console.log(users);
         res.status(200).json({ users });
 
     } catch (err) {
@@ -94,7 +91,6 @@ exports.getAllGroupUsers = async (req, res, next) => {
 exports.addMoreUser = async (req, res, next) => {
     try {
         const { groupId, users } = req.body;
-        // console.log(groupId, users);
         const group = await Group.findOne({ where: { id: groupId } });
 
         if (!group) {
@@ -115,23 +111,20 @@ exports.addMoreUser = async (req, res, next) => {
 exports.removeUser = async (req, res, next) => {
     try {
         const { userId, groupId } = req.body;
-        // console.log(userId, groupId);
 
         const group = await Group.findOne({ where: { id: groupId } });
 
-        // const user = await group.getUsers({ where: { id: userId } })
         if (!group) {
             return res.status(409).json({ msg: 'There is no group exist' })
         }
         const member = await Member.findOne({ where: { userId: userId, groupId: groupId } });
+
         if (member.dataValues.admin === true) {
             return res.status(408).json({ message: "Admin cannot remove themselves from the group" })
         }
 
         await member.destroy();
         res.status(200).send('Removed successfully');
-        // console.log(member.dataValues.admin);
-        // res.status(200).json({ success: true });
     } catch (err) {
         console.log(err);
         res.status(500).json({ success: false, msg: 'Internal Server Error' });
@@ -141,7 +134,6 @@ exports.removeUser = async (req, res, next) => {
 exports.makeAdmin = async (req, res, next) => {
     try {
         const { userId, userName, groupId } = req.body;
-        // console.log(userId, userName);
 
         const group = await Group.findOne({ where: { id: groupId } });
         if (!group) {
@@ -163,7 +155,6 @@ exports.makeAdmin = async (req, res, next) => {
 exports.removeAdmin = async (req, res, next) => {
     try {
         const { userId, userName, groupId } = req.body;
-        // console.log(userId, userName);
 
         const group = await Group.findOne({ where: { id: groupId } });
         if (!group) {
