@@ -3,8 +3,8 @@ const jwt = require('jsonwebtoken');
 const sequelize = require('sequelize')
 const { Sequelize } = require('sequelize');
 
-const User = require('../Models/userModel');
-const Group = require('../Models/Group');
+const Group = require('../models/group')
+const User = require('../models/user');
 
 exports.SignUpUser = async (req, res, next) => {
     try {

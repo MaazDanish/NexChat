@@ -1,6 +1,6 @@
 
 const Sequelize = require('sequelize');
-const sequelize = require('../Util/database');
+const sequelize = require('../utils/database');
 
 const Group = sequelize.define('group', {
     id: {

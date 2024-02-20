@@ -1,25 +1,25 @@
 const { CronJob } = require('cron');
 const { Op } = require('sequelize');
 
-const Archived = require('../Models/ArchiedChats');
-const Chat = require('../Models/chatModel');
+const Archived_Messages = require('../models/archivedMessage');
+const Message = require('../models/message');
 
 const cronJob = CronJob.from({
     cronTime: '0 0 * * *',
     // cronTime: '*/1 * * * * *',
     onTick: async function () {
-        const archivedchats = await Chat.findAll({
+        const Archived_Messages = await Message.findAll({
             where: {
                 createdAt: {
                     [Op.lt]: new Date()
                 }
             }
         })
-        archivedchats.forEach(async message => {
+        Archived_Messages.forEach(async message => {
             // console.log(message);
             console.log(message.toJSON(), 'cron job se ara hai bhaiiiiii----------');
             const data = message.toJSON();
-            await Archived.create(data);
+            await Archived_Messages.create(data);
             message.destroy();
         })
     },

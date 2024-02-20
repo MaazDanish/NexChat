@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
-const sequelize = require('../Util/database');
+const sequelize = require('../utils/database');
 
-const Chat = sequelize.define('chat', {
+const Message = sequelize.define('message', {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -9,7 +9,7 @@ const Chat = sequelize.define('chat', {
         primaryKey: true
 
     },
-    chat: {
+    messages: {
         type: Sequelize.STRING,
         allowNull: false
     }
@@ -19,4 +19,4 @@ const Chat = sequelize.define('chat', {
     // }
 })
 
-module.exports = Chat;
+module.exports = Message;

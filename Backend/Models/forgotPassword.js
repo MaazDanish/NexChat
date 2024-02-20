@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
-const sequelize = require('../Util/database');
+const sequelize = require('../utils/database');
 
-const ForGotPassWord = sequelize.define('forgotpassword', {
+const ForgotPassword = sequelize.define('forgotpassword', {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -20,4 +20,4 @@ const ForGotPassWord = sequelize.define('forgotpassword', {
     }
 })
 
-module.exports = ForGotPassWord;
+module.exports = ForgotPassword;

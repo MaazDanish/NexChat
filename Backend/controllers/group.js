@@ -1,7 +1,6 @@
-const Group = require('../Models/Group')
-const User = require('../Models/userModel');
-const Chat = require('../Models/chatModel');
-const Member = require('../Models/Member');
+const Group = require('../models/group')
+const User = require('../models/user');
+const Member = require('../models/member');
 const { UUIDV4 } = require('sequelize');
 
 

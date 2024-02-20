@@ -27,7 +27,6 @@ async function SignUp(event) {
         if (isValidPassword(event.target.password.value, event.target.confirmPassword.value)) {
             const user = await axios.post('http://localhost:4106/nexchat/user/sign-up', userInfo);
             if (user.status === 200) {
-                alert('registration is done')
                 msg.classList.add('msg');
                 msg.textContent = 'Your ragistration is done successfully';
             }
@@ -121,7 +120,7 @@ async function SignIn(event) {
         if (user.status === 200) {
             console.log(user.data.token);
             localStorage.setItem("token", user.data.token);
-            window.location.href = './chat.html';
+            window.location.href = './messages.html';
         }
         clearFields(event);
     } catch (res) {

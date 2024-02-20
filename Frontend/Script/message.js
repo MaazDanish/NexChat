@@ -12,7 +12,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         // console.log('hiiiii');
         const headers = { 'authorization': localStorage.getItem('token') };
         // console.log(headers.authorization);
-        const user = await axios.get('http://localhost:4106/nexchat/user/getUserInfo', { headers });
+        const user = await axios.get('http://localhost:4106/nexchat/user/get-user-info', { headers });
         // console.log(user);
         displayUserInformation(user.data)
         // fetchMsg();
@@ -57,7 +57,9 @@ function saveUserForaddingInGroup(user) {
 }
 
 // CREATING GROUP
-async function createGroup() {
+var createGroup = document.getElementById('createGroup');
+createGroup.addEventListener('click', createGroups);
+async function createGroups() {
     try {
 
         var notification = document.getElementById('notification');
@@ -108,6 +110,7 @@ function displayGroupList(grp) {
         const currentGroup = grp[i];
         li.onclick = function () {
             fetchMsg(currentGroup.id, currentGroup.name)
+            console.log(currentGroup);
             displayGroupDetails(currentGroup.id, currentGroup.name, currentGroup);
         }
         parent.appendChild(li);
@@ -343,20 +346,20 @@ function scrollToBottom() {
 }
 
 // SENDING MESSAGESD
-var sendChat = document.getElementById('sendchat');
+var sendChat = document.getElementById('sendmessage');
 sendChat.addEventListener('click', async () => {
     try {
-        var chat = document.getElementById('chat-input');
+        var message = document.getElementById('message-input');
         const headers = { 'authorization': localStorage.getItem('token') };
         const groupId = localStorage.getItem('groupId');
 
-        const chats = {
-            chat: chat.value,
+        const Messages = {
+            message: message.value,
             groupId: groupId
         };
-        socket.emit('message:send-message', chats, () => {
-            console.log(chats);
-            chat.value = '';
+        socket.emit('message:send-message', Messages, () => {
+            console.log(Messages);
+            message.value = '';
             scrollToBottom();
         })
         // let response = await axios.post('http://localhost:4106/nexchat/chats/send-group-msg', chats, { headers });
@@ -382,16 +385,17 @@ async function fetchMsg(grpId, groupName) {
         //     }
         // });
 
+        // Implement socket logic here
         socket.emit('join-room', groupId, (groupMessages, id, groupUser) => {
             // console.log('hiiiiii');
-            // console.log(groupMessages, id, groupUser);
-            // showMsg(groupMessages, usersInAGroup.data.users)
+            console.log(groupMessages, id, groupUser);
             showMsg(groupMessages, groupUser, id)
             scrollToBottom();
         })
 
-        // const groupMessages = await axios.get('http://localhost:4106/nexchat/chats/get-group-msg', { params: { groupId: grpId } })
 
+        // const groupMessages = await axios.get('http://localhost:4106/nexchat/chats/get-group-msg', { params: { groupId: grpId } })
+        // showMsg(groupMessages, usersInAGroup.data.users)
         // console.log(groupMessages);
     } catch (err) {
         console.log(err);
@@ -421,18 +425,18 @@ function showMsg(messages, users, id) {
             if (messages[i].memberId === null) {
                 console.log('hi');
                 li.classList.add('msgs-div', 'text-start');
-                li.textContent = `Removed User : ${messages[i].chat}`;
+                li.textContent = `Removed User : ${messages[i].messages}`;
 
             } else if (id === messages[i].memberId) {
                 console.log('hi2');
                 li.classList.add('msgs-div', 'text-end');
-                li.textContent = `You : ${messages[i].chat}`;
+                li.textContent = `You : ${messages[i].messages}`;
             } else {
                 console.log('hi3');
                 const u = users.find(user => user.member.id === messages[i].memberId)
                 // console.log(u.name);
                 li.classList.add('msgs-div', 'text-start');
-                li.textContent = `${u.name} : ${messages[i].chat}`;
+                li.textContent = `${u.name} : ${messages[i].messages}`;
 
             }
 

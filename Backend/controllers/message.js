@@ -1,16 +1,14 @@
-const User = require('../Models/userModel');
-const Chat = require('../Models/chatModel');
-const Member = require('../Models/Member');
-const Group = require('../Models/Group');
+const Group = require('../models/group')
+const Message = require('../models/message');
+const Member = require('../models/member');
 const { Sequelize } = require('sequelize');
 
-
-exports.PostChat = async (req, res, next) => {
+exports.PostMessage = async (req, res, next) => {
     try {
         const { chat } = req.body;
         const userId = req.decoded_UserId.userId;
-        const chats = await Chat.create({
-            chat: chat,
+        const chats = await Message.create({
+            messages: chat,
             userId: userId
         });
 
@@ -21,7 +19,7 @@ exports.PostChat = async (req, res, next) => {
     }
 }
 
-exports.PostGroupChat = async (req, res, next) => {
+exports.PostGroupMessage = async (req, res, next) => {
     try {
 
         const { groupId, chat } = req.body;
@@ -32,8 +30,8 @@ exports.PostGroupChat = async (req, res, next) => {
             res.status(409).json({ message: 'You are not a member of this group', success: false })
         }
         const memberId = member.dataValues.id;
-        const msg = await Chat.create({
-            chat: chat,
+        const msg = await Message.create({
+            messages: chat,
             groupId: groupId,
             memberId: memberId
         });
@@ -46,7 +44,7 @@ exports.PostGroupChat = async (req, res, next) => {
     }
 }
 
-exports.getGroupChat = async (req, res, next) => {
+exports.getGroupMessage = async (req, res, next) => {
     try {
 
         const id = req.query.groupId;
@@ -55,7 +53,7 @@ exports.getGroupChat = async (req, res, next) => {
 
         // console.log(id, 'id is testing');
         if (group) {
-            const message = await Chat.findAll({
+            const message = await Message.findAll({
                 where: {
                     groupId: id
                 },
@@ -85,12 +83,12 @@ exports.getGroupChat = async (req, res, next) => {
     }
 }
 
-exports.getAllChats = async (req, res, next) => {
+exports.getAllMessages = async (req, res, next) => {
     try {
         const id = req.query.last;
         console.log(id, 'coming from front end as a local storage id');
 
-        const chat = await Chat.findAll({
+        const chat = await Message.findAll({
             where: {
                 id: {
                     [Sequelize.Op.gt]: id
@@ -109,7 +107,7 @@ exports.getAllChats = async (req, res, next) => {
         console.log(err);
     }
 }
-exports.getGroupChatOne = async (req, res, next) => {
+exports.getGroupMessageOne = async (req, res, next) => {
     try {
 
         const id = req.query.groupId;
@@ -119,7 +117,7 @@ exports.getGroupChatOne = async (req, res, next) => {
         // console.log(last,'teting last');
         // console.log(id, 'id is testing',last);
         if (group) {
-            const message = await Chat.findAll({
+            const message = await Message.findAll({
                 where: {
                     groupId: id,
                     id: {

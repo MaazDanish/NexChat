@@ -1,13 +1,10 @@
 const { fn, Sequelize, col, Op } = require('sequelize');
-const Message = require('../Models/chatModel')
-const User = require('../Models/userModel');
-const Group = require('../Models/Group');
-const Member = require('../Models/Member');
+const Group = require('../models/group')
 
 module.exports = (io, socket) => {
     const addMessage = async (data, cb) => {
         const groupId = data.groupId;
-        const message = data.chat;
+        const message = data.message;
         const group = await Group.findByPk(groupId)
         // console.log(group);
         console.log(socket.user, 'socketid');
@@ -15,10 +12,10 @@ module.exports = (io, socket) => {
         console.log(user, 'user');
         const member = user[0].member
         console.log(member, 'member');
-        const result = await member.createChat({
-            chat: message, groupId
+        const result = await member.createMessage({
+            messages: message, groupId
         })
-        socket.to(data.groupId).emit('message:recieve-message', data.chat, socket.user.name)
+        socket.to(data.groupId).emit('message:recieve-message', data.message, socket.user.name)
 
         cb()
     }
@@ -32,14 +29,14 @@ module.exports = (io, socket) => {
         })
         const member = user[0].member;
 
-        const chats = await group.getChats();
+        const messages = await group.getMessages();
         const users = await group.getUsers({
             attributes: {
                 exclude: ['password', 'createdAt', 'updatedAt', 'email', 'phoneNumber']
             }
         })
 
-        await cb(chats, member.id, users)
+        await cb(messages, member.id, users)
     })
     socket.on('message:send-message', addMessage);
     socket.on('file:send-file-data', (data, groupId) => {

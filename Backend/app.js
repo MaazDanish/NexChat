@@ -2,20 +2,20 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 
-const sequelize = require('./Util/database');
-const userRoutes = require('./Routes/userRoutes');
-const chatRoutes = require('./Routes/chatRoutes');
-const groupRoutes = require('./Routes/groupRoutes');
-const resetPasswordRoutes = require('./Routes/forgotpasswordRoute');
+const sequelize = require('./utils/database');
+const user = require('./routes/user');
+const message = require('./routes/message');
+const group = require('./routes/group');
+const forgotPassword = require('./routes/forgotpassword');
+const messages = require('./routes/socket_Io')
 
-const User = require('./Models/userModel');
-const Chat = require('./Models/chatModel');
-const Group = require('./Models/Group');
-const Member = require('./Models/Member');
-const ForGotPassWord = require('./Models/forgotPassword');
-const { socketToken } = require('./Middleware/authentication');
-const messageRoutes = require('./Routes/chatsRoutes');
-const cronJob = require('./Util/cronJob')
+const User = require('./models/user');
+const Message = require('./models/message');
+const Group = require('./models/group');
+const Member = require('./models/member');
+const ForgotPassword = require('./models/forgotPassword');
+const { socketToken } = require('./middlewares/authentication');
+const cronJob = require('./utils/cronJob')
 
 const app = express();
 
@@ -31,10 +31,10 @@ app.use(cors({
 }));
 app.use(express.json());
 
-app.use('/nexchat/user', userRoutes);
-app.use('/nexchat/chats', chatRoutes);
-app.use('/nexchat/group', groupRoutes);
-app.use('/nexchat/password', resetPasswordRoutes);
+app.use('/nexchat/user', user);
+// app.use('/nexchat/chats', message);
+app.use('/nexchat/group', group);
+app.use('/nexchat/password', forgotPassword);
 
 // User.hasMany(Chat);
 // Chat.belongsTo(User);
@@ -42,14 +42,14 @@ app.use('/nexchat/password', resetPasswordRoutes);
 User.belongsToMany(Group, { through: Member });
 Group.belongsToMany(User, { through: Member });
 
-User.hasMany(ForGotPassWord);
-ForGotPassWord.belongsTo(User);
+User.hasMany(ForgotPassword);
+ForgotPassword.belongsTo(User);
 
-Group.hasMany(Chat);
-Chat.belongsTo(Group);
+Group.hasMany(Message);
+Message.belongsTo(Group);
 
-Member.hasMany(Chat);
-Chat.belongsTo(Member);
+Member.hasMany(Message);
+Message.belongsTo(Member);
 
 
 
@@ -59,13 +59,13 @@ sequelize.sync().then(() => {
             await socketToken(socket, next);
         })
         console.log(socket.id);
-        messageRoutes(io, socket);
+        messages(io, socket);
     }
     // app.listen();
     io.on('connection', connection);
     httpServer.listen(process.env.PORT_NUMBER)
     console.log(`Server is running on port ${process.env.PORT_NUMBER}`);
 }).catch(err => {
-    console.log('Server is not running due to internal problem');
+    console.log('Server is not running due to internal problem',err);
 })
 

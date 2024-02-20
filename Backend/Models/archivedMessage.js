@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
-const sequelize = require('../Util/database');
+const sequelize = require('../utils/database');
 
-const Archived = sequelize.define('archived', {
+const Archived_Messages = sequelize.define('archived_message', {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -9,7 +9,7 @@ const Archived = sequelize.define('archived', {
         primaryKey: true
 
     },
-    chat: {
+    messages: {
         type: Sequelize.STRING,
         allowNull: false
     },
@@ -27,4 +27,4 @@ const Archived = sequelize.define('archived', {
     }
 })
 
-module.exports = Archived;
+module.exports = Archived_Messages;

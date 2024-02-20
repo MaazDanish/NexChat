@@ -1,5 +1,5 @@
-const User = require('../Models/userModel');
-const ForGotPassWord = require('../Models/forgotPassword');
+const User = require('../models/user');
+const ForgotPassword = require('../models/forgotPassword');
 const nodemailer = require('nodemailer');
 const smtpTransport = require('nodemailer-smtp-transport');
 const sib = require('sib-api-v3-sdk')
@@ -29,7 +29,7 @@ exports.sendOTPviaEMail = async (req, res, next) => {
             isActive: true,
             otp: otp
         }
-        const forgotpasswordModels = await ForGotPassWord.create(object);
+        const ForgotPasswordModels = await ForgotPassword.create(object);
 
         const defaultClient = sib.ApiClient.instance;
         const apiKey = defaultClient.authentications['api-key'];
@@ -75,7 +75,7 @@ exports.verifyOTP = async (req, res) => {
         const otp = req.params.otp;
         console.log(otp);
 
-        const OTP_CHECK = await ForGotPassWord.findOne({
+        const OTP_CHECK = await ForgotPassword.findOne({
             where: {
                 otp: otp,
                 isActive: true
@@ -101,7 +101,7 @@ exports.updatePassword = async (req, res, next) => {
         console.log('hi');
         const { password, otp } = req.body;
         console.log(password, otp);
-        const fp = await ForGotPassWord.findOne({
+        const fp = await ForgotPassword.findOne({
             where: {
                 otp: otp,
                 isActive: true
